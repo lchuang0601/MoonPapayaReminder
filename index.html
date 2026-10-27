@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LunaPapaya Reminder - 智慧提醒管家</title>
+    <title>山上阿德提醒小幫手</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Mobile Home Screen Beautiful Icon & PWA Meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="山上阿德提醒">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/4f46e5/ffffff?text=🏔️🏮">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏔️</text></svg>">
+
     <style>
         body {
             font-family: 'Noto Sans TC', 'Inter', sans-serif;
@@ -46,12 +54,12 @@
     <header class="app-gradient text-white shadow-lg sticky top-0 z-40">
         <div class="max-w-4xl mx-auto px-4 py-3.5 flex justify-between items-center gap-2">
             <div class="flex items-center gap-2.5">
-                <div class="bg-white/20 p-2 rounded-2xl backdrop-blur-sm border border-white/30 text-xl animate-bounce-slow">
-                    🔔
+                <div class="bg-white/20 p-2 rounded-2xl backdrop-blur-sm border border-white/30 text-xl animate-bounce-slow shadow-sm">
+                    🏔️
                 </div>
                 <div>
-                    <h1 class="text-base sm:text-xl font-black tracking-wide drop-shadow">LunaPapaya Reminder</h1>
-                    <p class="text-[11px] sm:text-xs text-indigo-100 font-medium">智慧鬧鈴 • 國曆農曆 • 一鍵行事曆</p>
+                    <h1 class="text-base sm:text-xl font-black tracking-wide drop-shadow">山上阿德提醒小幫手</h1>
+                    <p class="text-[11px] sm:text-xs text-indigo-100 font-medium">農曆初一十五與大小事智慧鬧鈴</p>
                 </div>
             </div>
             <div class="bg-white/10 px-3 py-1.5 rounded-2xl border border-white/20 text-right">
@@ -70,7 +78,7 @@
                 <h2 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-bell text-indigo-600"></i> 事件提醒清單
                 </h2>
-                <p class="text-xs text-slate-500 mt-0.5">自訂大小事與拜拜出貨排程，時間到自動語音播報與彈出鬧鈴！</p>
+                <p class="text-xs text-slate-500 mt-0.5">保持網頁在背景開啟，時間到自動語音播報與彈出鬧鈴！</p>
             </div>
             <button onclick="openEventModal()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-plus"></i> 新增提醒事件
@@ -86,7 +94,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 mt-12 text-center text-xs">
-        <p class="mb-1">LunaPapaya Reminder • 智慧鬧鈴與農曆國曆管家系統</p>
+        <p class="mb-1">山上阿德提醒小幫手 • 農曆國曆管家系統</p>
         <p>© 2026 All rights reserved. 輕鬆管理大小事，永不遺忘重要時刻！</p>
     </footer>
 
@@ -106,35 +114,32 @@
                 <input type="hidden" id="event-id">
                 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱 (自訂)</label>
-                    <input type="text" id="event-title" required placeholder="例如：爐主初一拜拜 / 木瓜出貨 / 拜訪姑丈" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱</label>
+                    <input type="text" id="event-title" required placeholder="例如：爐主初一拜拜 / 木瓜出貨" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label class="block text-slate-700 font-bold mb-1">事件規則類型</label>
                         <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
-                            <option value="lunar_recurring">1. 常規循環 (農曆初一/十五)</option>
-                            <option value="gregorian_single">2. 特定單一事件 (國曆指定日期)</option>
+                            <option value="lunar_recurring">1. 農曆常規循環</option>
+                            <option value="gregorian_single">2. 特定單一事件</option>
                         </select>
                     </div>
                     <div id="lunar-rule-wrapper">
                         <label class="block text-slate-700 font-bold mb-1">農曆循環方式</label>
                         <select id="lunar-rule-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
-                            <option value="1_and_15">農曆初一與十五 (當天)</option>
-                            <option value="minus_3_days">農曆初一與十五的前 3 天 (出貨排程)</option>
-                            <option value="minus_1_day">農曆初一與十五的前 1 天 (前一晚預備)</option>
+                            <option value="lunar_1">農曆初一 (當天)</option>
+                            <option value="lunar_15">農曆十五 (當天)</option>
+                            <option value="minus_3_days_1">農曆初一前 3 天 (木瓜出貨)</option>
+                            <option value="minus_3_days_15">農曆十五前 3 天 (木瓜出貨)</option>
+                            <option value="minus_1_day">農曆初一/十五前 1 天 (前一晚預備)</option>
                         </select>
                     </div>
                     <div id="solar-date-wrapper" class="hidden">
-                        <label class="block text-slate-700 font-bold mb-1">指定國曆日期</label>
+                        <label class="block text-slate-700 font-bold mb-1">指定日期</label>
                         <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-slate-700 font-bold mb-1">最大通知次數限制 (避免無限提醒)</label>
-                    <input type="number" id="event-max-count" min="1" max="99" value="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如：3次">
                 </div>
 
                 <div>
@@ -150,7 +155,12 @@
                 </div>
 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">語音播報與詳細備註內容</label>
+                    <label class="block text-slate-700 font-bold mb-1">最大通知次數限制 (次)</label>
+                    <input type="number" id="event-max-count" min="1" max="99" value="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如：6次">
+                </div>
+
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1">詳細備註內容</label>
                     <textarea id="event-desc" rows="2" placeholder="當鬧鈴響起時，語音將會唸出或顯示此詳細內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
 
@@ -189,43 +199,57 @@
         let events = [
             {
                 id: '1',
-                title: '🏮 爐主農曆初一十五拜拜',
+                title: '🏮 爐主農曆初一拜拜',
                 type: 'lunar_recurring',
-                lunarRule: '1_and_15',
+                lunarRule: 'lunar_1',
                 solarDate: '',
-                maxCount: 3,
+                maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
                     { hour: '19', minute: '00', label: '前一晚預備' },
                     { hour: '06', minute: '00', label: '當天早上提醒' }
                 ],
-                desc: '請準備三牲四果、金銀財寶祭拜祈福。'
+                desc: '農曆初一，請準備三牲四果拜拜祈福。'
             },
             {
                 id: '2',
-                title: '🍈 木瓜出貨預備 (初一十五前3天)',
+                title: '🏮 爐主農曆十五拜拜',
                 type: 'lunar_recurring',
-                lunarRule: 'minus_3_days',
+                lunarRule: 'lunar_15',
                 solarDate: '',
-                maxCount: 3,
+                maxCount: 6,
+                triggeredCount: 0,
+                reminders: [
+                    { hour: '19', minute: '00', label: '前一晚預備' },
+                    { hour: '06', minute: '00', label: '當天早上提醒' }
+                ],
+                desc: '農曆十五，請準備澎湃供品拜拜祈福。'
+            },
+            {
+                id: '3',
+                title: '🍈 木瓜出貨預備 (農曆初一前3天)',
+                type: 'lunar_recurring',
+                lunarRule: 'minus_3_days_1',
+                solarDate: '',
+                maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
                     { hour: '19', minute: '00', label: '提前3天通知' }
                 ],
-                desc: '拜拜前三天，請準備木瓜出貨與宅配裝箱！'
+                desc: '農曆初一前三天，請準備木瓜出貨與宅配裝箱！'
             },
             {
-                id: '3',
-                title: '📌 拜訪姑丈',
-                type: 'gregorian_single',
-                lunarRule: '',
-                solarDate: '2026-06-15',
-                maxCount: 1,
+                id: '4',
+                title: '🍈 木瓜出貨預備 (農曆十五前3天)',
+                type: 'lunar_recurring',
+                lunarRule: 'minus_3_days_15',
+                solarDate: '',
+                maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '14', minute: '00', label: '出發前提醒' }
+                    { hour: '19', minute: '00', label: '提前3天通知' }
                 ],
-                desc: '記得攜帶新鮮水果前往拜訪姑丈。'
+                desc: '農曆十五前三天，請準備木瓜出貨與宅配裝箱！'
             }
         ];
 
@@ -325,9 +349,10 @@
             if (currentHMKey === lastTriggeredMinuteKey) return;
 
             const lunar = getLunarDay(now);
-            const isLunar1or15 = (lunar.lunarDay === 1 || lunar.lunarDay === 15);
-            const isLunarMinus3 = (lunar.lunarDay === 27 || lunar.lunarDay === 12);
-            const isLunarMinus1 = (lunar.lunarDay === 29 || lunar.lunarDay === 14);
+            const isLunar1 = (lunar.lunarDay === 1);
+            const isLunar15 = (lunar.lunarDay === 15);
+            const isLunarMinus3For1 = (lunar.lunarDay === 27); // 3 days before 1st (approx 27th of prev month)
+            const isLunarMinus3For15 = (lunar.lunarDay === 12); // 3 days before 15th (12th)
 
             events.forEach(ev => {
                 if (ev.maxCount && ev.triggeredCount >= ev.maxCount) return;
@@ -336,9 +361,11 @@
                     if (r.hour === currentHour && r.minute === currentMinute) {
                         let shouldTrigger = false;
                         if (ev.type === 'lunar_recurring') {
-                            if (ev.lunarRule === '1_and_15' && isLunar1or15) shouldTrigger = true;
-                            if (ev.lunarRule === 'minus_3_days' && isLunarMinus3) shouldTrigger = true;
-                            if (ev.lunarRule === 'minus_1_day' && isLunarMinus1) shouldTrigger = true;
+                            if (ev.lunarRule === 'lunar_1' && isLunar1) shouldTrigger = true;
+                            if (ev.lunarRule === 'lunar_15' && isLunar15) shouldTrigger = true;
+                            if (ev.lunarRule === 'minus_3_days_1' && isLunarMinus3For1) shouldTrigger = true;
+                            if (ev.lunarRule === 'minus_3_days_15' && isLunarMinus3For15) shouldTrigger = true;
+                            if (ev.lunarRule === 'minus_1_day' && (lunar.lunarDay === 29 || lunar.lunarDay === 14)) shouldTrigger = true;
                         } else if (ev.type === 'gregorian_single') {
                             if (ev.solarDate === todaySolarStr) shouldTrigger = true;
                         }
@@ -404,8 +431,8 @@
 
             events.forEach(ev => {
                 const typeBadge = ev.type === 'lunar_recurring' 
-                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 1. 常規循環</span>`
-                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 2. 特定單一事件 (${ev.solarDate})</span>`;
+                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 常規循環</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 單一事件 (${ev.solarDate})</span>`;
 
                 const countBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 已通知: ${ev.triggeredCount || 0} / ${ev.maxCount || '∞'} 次</span>`;
 
@@ -464,7 +491,7 @@
             const icsContent = [
                 'BEGIN:VCALENDAR',
                 'VERSION:2.0',
-                'PRODID:-//LunaPapaya Reminder//TW',
+                'PRODID:-//山上阿德提醒小幫手//TW',
                 'BEGIN:VEVENT',
                 `SUMMARY:${ev.title}`,
                 `DESCRIPTION:${ev.desc || ''}`,
@@ -499,9 +526,9 @@
                     document.getElementById('event-id').value = ev.id;
                     document.getElementById('event-title').value = ev.title;
                     document.getElementById('event-type').value = ev.type;
-                    document.getElementById('lunar-rule-type').value = ev.lunarRule || '1_and_15';
+                    document.getElementById('lunar-rule-type').value = ev.lunarRule || 'lunar_1';
                     document.getElementById('event-solar-date').value = ev.solarDate || '';
-                    document.getElementById('event-max-count').value = ev.maxCount || 3;
+                    document.getElementById('event-max-count').value = ev.maxCount || 6;
                     document.getElementById('event-desc').value = ev.desc || '';
                     onEventTypeChanged();
                     ev.reminders.forEach(r => addReminderRow(r.hour, r.minute, r.label));
@@ -510,9 +537,9 @@
                 document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-indigo-600"></i> 新增提醒事件';
                 document.getElementById('event-form').reset();
                 document.getElementById('event-id').value = '';
-                document.getElementById('event-max-count').value = 3;
+                document.getElementById('event-max-count').value = 6;
                 onEventTypeChanged();
-                // Default to 1 reminder time as requested
+                // Default to 1 reminder time
                 addReminderRow('19', '00', '提醒通知');
             }
         }
@@ -534,7 +561,7 @@
             }
         }
 
-        function addReminderRow(hourVal = '08', minuteVal = '00', labelVal = '提醒通知') {
+        function addReminderRow(hourVal = '19', minuteVal = '00', labelVal = '提醒通知') {
             const container = document.getElementById('reminder-rules-container');
             
             let hoursOptions = '';
@@ -576,7 +603,7 @@
             const type = document.getElementById('event-type').value;
             const lunarRule = document.getElementById('lunar-rule-type').value;
             const solarDate = document.getElementById('event-solar-date').value;
-            const maxCount = parseInt(document.getElementById('event-max-count').value) || 3;
+            const maxCount = parseInt(document.getElementById('event-max-count').value) || 6;
             const desc = document.getElementById('event-desc').value;
 
             const reminderRows = document.querySelectorAll('.reminder-row');
