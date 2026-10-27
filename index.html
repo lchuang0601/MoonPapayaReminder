@@ -63,7 +63,7 @@
                     <span class="text-xs sm:text-sm font-bold text-indigo-100 tracking-wider">提醒小幫手</span>
                 </div>
             </div>
-            <!-- Date & Time in Three Lines -->
+            <!-- Date & Time in Three Separate Lines -->
             <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/20 text-right flex flex-col justify-center">
                 <div id="current-solar-date-str" class="text-[11px] sm:text-xs font-bold text-white leading-tight">2026年10月27日(星期二)</div>
                 <div id="current-lunar-date-str" class="text-[11px] sm:text-xs font-medium text-indigo-100 leading-tight">農曆丙午年九月十八日</div>
@@ -113,15 +113,15 @@
                 </div>
             </div>
 
-            <!-- Weekday Headers -->
+            <!-- Weekday Headers (Monday to Sunday) with Red Weekend -->
             <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 mb-2">
-                <div class="text-rose-500">日</div>
                 <div>一</div>
                 <div>二</div>
                 <div>三</div>
                 <div>四</div>
                 <div>五</div>
-                <div class="text-indigo-600">六</div>
+                <div class="text-rose-500">六</div>
+                <div class="text-rose-500">日</div>
             </div>
 
             <!-- Days Grid -->
@@ -243,7 +243,7 @@
     </div>
 
     <script>
-        // --- State Management ---
+        // --- State Management with pre-configured events (Separate Lunar 1st & 15th, and Papaya 3 days prior) ---
         let events = [
             {
                 id: '1',
@@ -282,7 +282,7 @@
                 solarDate: '',
                 calendarType: 'solar',
                 lunarMonth: 1,
-                lunarDay: 27, // Lunar 27 is 3 days before Lunar 1 of next month (29/30 or 1)
+                lunarDay: 27, // Lunar 27 is 3 days before Lunar 1 of next month
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
@@ -415,7 +415,7 @@
             
             const lunar = getLunarDateInfo(now);
 
-            // Three separate lines for Date & Time
+            // Three separate lines for Date & Time as requested
             document.getElementById('current-solar-date-str').innerText = `${year}年${month}月${date}日(${weekday})`;
             document.getElementById('current-lunar-date-str').innerText = `農曆${lunar.lunarYearNum}年${lunar.lunarMonthName}${lunar.lunarDayName}`;
             document.getElementById('current-time-str').innerText = `${hours}:${minutes}:${seconds}`;
@@ -537,7 +537,7 @@
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-3xl p-5 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-indigo-200";
                 
-                // Left action buttons: Delete, Calendar Export, Test Alarm | Right: Edit
+                // Left action buttons: Delete, Calendar Export, Test Alarm | Right: Edit (as requested)
                 card.innerHTML = `
                     <div class="flex items-center gap-2 self-start sm:self-center flex-wrap">
                         <button onclick="deleteEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除事件">
@@ -571,7 +571,7 @@
             });
         }
 
-        // --- Google Calendar Style Monthly Grid Renderer ---
+        // --- Google Calendar Style Monthly Grid Renderer (Starts Monday, Sat/Sun Red) ---
         function changeMonth(direction) {
             currentCalendarMonth += direction;
             if (currentCalendarMonth > 11) {
@@ -597,14 +597,17 @@
             titleEl.innerText = `${currentCalendarYear}年 ${currentCalendarMonth + 1}月`;
             gridEl.innerHTML = '';
 
-            const firstDayIndex = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+            // JS getDay(): 0=Sun, 1=Mon, ..., 6=Sat
+            // Monday start: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+            const firstDayRaw = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+            const firstDayIndex = (firstDayRaw === 0) ? 6 : firstDayRaw - 1;
+
             const totalDays = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
             const prevTotalDays = new Date(currentCalendarYear, currentCalendarMonth, 0).getDate();
 
             const today = new Date();
             const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-            // Helper to check which events match a specific solar date
             function getEventsForDate(year, month, day) {
                 const targetDate = new Date(year, month, day);
                 const solarStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -646,6 +649,10 @@
             for (let d = 1; d <= totalDays; d++) {
                 const solarStr = `${currentCalendarYear}-${String(currentCalendarMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 const isToday = (solarStr === todayStr);
+                const targetDateObj = new Date(currentCalendarYear, currentCalendarMonth, d);
+                const dayOfWeek = targetDateObj.getDay(); // 0=Sun, 6=Sat
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
                 const { matched, lunar } = getEventsForDate(currentCalendarYear, currentCalendarMonth, d);
 
                 const cell = document.createElement('div');
@@ -653,17 +660,21 @@
                 
                 let eventsHtml = '';
                 matched.forEach(ev => {
-                    const shortTitle = ev.title.length > 6 ? ev.title.slice(0, 6) + '..' : ev.title;
+                    const shortTitle = ev.title.length > 7 ? ev.title.slice(0, 7) + '..' : ev.title;
                     eventsHtml += `
-                        <div class="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5" title="${ev.title}">
+                        <div onclick="editEvent('${ev.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5 cursor-pointer transition" title="點擊修改: ${ev.title}">
                             ${shortTitle}
                         </div>
                     `;
                 });
 
+                const dayNumClass = isToday 
+                    ? 'bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-black' 
+                    : (isWeekend ? 'text-rose-500 font-black' : 'text-slate-800 font-black');
+
                 cell.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-black ${isToday ? 'bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center' : 'text-slate-800'}">${d}</span>
+                        <span class="text-xs ${dayNumClass}">${d}</span>
                         <span class="text-[9px] text-slate-400 font-medium">${lunar.lunarMonthName}${lunar.lunarDayName}</span>
                     </div>
                     <div class="space-y-0.5 overflow-y-auto max-h-[55px]">
@@ -673,7 +684,7 @@
                 gridEl.appendChild(cell);
             }
 
-            // Next month leading days to complete 35 or 42 grid slots
+            // Next month leading days to complete grid slots (multiple of 7)
             const totalSlots = gridEl.children.length;
             const remainingSlots = totalSlots <= 35 ? 35 - totalSlots : 42 - totalSlots;
             for (let d = 1; d <= remainingSlots; d++) {
@@ -755,11 +766,11 @@
                 document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-indigo-600"></i> 新增提醒事件';
                 document.getElementById('event-form').reset();
                 document.getElementById('event-id').value = '';
-                document.getElementById('event-max-count').value = 6; // Default to 6
+                document.getElementById('event-max-count').value = 6;
                 document.querySelector('input[name="calendar-type"][value="solar"]').checked = true;
                 onEventTypeChanged();
                 toggleCalendarType();
-                // Default to exactly 1 reminder time row
+                // Default to exactly 1 reminder time row as requested
                 addReminderRow('19', '00', '提醒通知');
             }
         }
