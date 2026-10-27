@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lunar JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.14/lunar.min.js"></script>
     
-    <!-- Mobile Home Screen Beautiful Icon & PWA Meta -->
+    <!-- PWA Meta -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="山上阿德提醒">
@@ -53,21 +55,19 @@
     <!-- Top Header -->
     <header class="app-gradient text-white shadow-lg sticky top-0 z-40">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center gap-2">
-            <!-- App Name in Two Lines -->
             <div class="flex items-center gap-2.5">
                 <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-sm border border-white/30 text-xl animate-bounce-slow shadow-sm">
                     🏔️
                 </div>
                 <div class="flex flex-col">
                     <h1 class="text-base sm:text-lg font-black tracking-wide drop-shadow leading-tight">山上阿德</h1>
-                    <span class="text-xs sm:text-sm font-bold text-indigo-100 tracking-wider">提醒小幫手</span>
+                    <span class="text-xs sm:text-sm font-bold text-indigo-100 tracking-wider">提醒小幫手 (農家行事曆)</span>
                 </div>
             </div>
-            <!-- Date & Time in Three Separate Lines -->
             <div class="bg-white/10 px-3.5 py-2 rounded-2xl border border-white/20 text-right flex flex-col justify-center">
                 <div id="current-solar-date-str" class="text-[11px] sm:text-xs font-bold text-white leading-tight">2026年10月27日(星期二)</div>
                 <div id="current-lunar-date-str" class="text-[11px] sm:text-xs font-medium text-indigo-100 leading-tight">農曆丙午年九月十八日</div>
-                <div id="current-time-str" class="text-xs sm:text-sm font-black tracking-wider text-white mt-0.5 leading-tight">16:20:00</div>
+                <div id="current-time-str" class="text-xs sm:text-sm font-black tracking-wider text-white mt-0.5 leading-tight">19:02:00</div>
             </div>
         </div>
     </header>
@@ -83,9 +83,14 @@
                 </h2>
                 <p class="text-xs text-slate-500 mt-0.5">保持網頁分頁在背景開啟，時間到自動語音播報與彈出鬧鈴！</p>
             </div>
-            <button onclick="openEventModal()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-plus"></i> 新增提醒事件
-            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <div id="sync-status" class="hidden sm:flex items-center gap-1.5 text-[11px] text-emerald-600 font-bold bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200">
+                    <i class="fa-solid fa-cloud-arrow-up animate-pulse"></i> 私人雲端同步
+                </div>
+                <button onclick="openEventModal()" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-plus"></i> 新增提醒事件
+                </button>
+            </div>
         </div>
 
         <!-- Events List Container -->
@@ -93,7 +98,7 @@
             <!-- Dynamic events rendered here -->
         </div>
 
-        <!-- Interactive Monthly Grid (Monday Start) -->
+        <!-- Interactive Monthly Grid (Monday Start, Weekend Red) -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 card-shadow border border-slate-100 mt-8">
             <div class="flex flex-col sm:flex-row items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-3">
                 <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
@@ -134,8 +139,8 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 mt-12 text-center text-xs">
-        <p class="mb-1">山上阿德提醒小幫手 • 農曆國曆管家系統</p>
-        <p>© 2026 All rights reserved. 輕鬆管理大小事，永不遺忘重要時刻！</p>
+        <p class="mb-1">山上阿德提醒小幫手 • 農家行事曆管家系統 (Private Cloud Sync)</p>
+        <p>© 2026 All rights reserved. 輕鬆管理個人大小事，永不遺忘重要時刻！</p>
     </footer>
 
     <!-- Modal: Add/Edit Event -->
@@ -154,7 +159,7 @@
                 <input type="hidden" id="event-id">
                 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱</label>
+                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱與圖示</label>
                     <input type="text" id="event-title" required placeholder="例如：🏮 爐主拜拜 或 🍈 木瓜出貨預備" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                 </div>
 
@@ -162,13 +167,48 @@
                     <div>
                         <label class="block text-slate-700 font-bold mb-1">事件規則類型</label>
                         <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
-                            <option value="recurring">常規循環</option>
-                            <option value="single">單一事件</option>
+                            <option value="recurring">常規循環 (每個月)</option>
+                            <option value="single">單一事件 (指定日期)</option>
                         </select>
+                        
+                        <div id="recurring-settings-wrapper" class="mt-2 space-y-2">
+                            <select id="recurring-rule" onchange="onRecurringRuleChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                                <option value="lunar_1">【農曆】每月初一 (爐主拜拜)</option>
+                                <option value="lunar_15">【農曆】每月十五 (爐主拜拜)</option>
+                                <option value="lunar_28">【農曆】初一前3天 / 廿八 (木瓜出貨)</option>
+                                <option value="lunar_12">【農曆】十五前3天 / 十二 (木瓜出貨)</option>
+                                <option value="custom_lunar_day">【農曆】自訂每個月固定幾號 (1-30)</option>
+                                <option value="custom_solar_day">【國曆】自訂每個月固定幾號 (1-31)</option>
+                                <option value="monthly_last_fri">【國曆】每月最後一個星期五</option>
+                            </select>
+
+                            <!-- Custom Lunar Day Selector (1-30) -->
+                            <div id="custom-lunar-day-box" class="hidden pt-1">
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">選擇【農曆】固定日期 (每個月)</label>
+                                <select id="custom-lunar-day-val" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                                    <option value="1">農曆初一</option><option value="2">農曆初二</option><option value="3">農曆初三</option><option value="4">農曆初四</option><option value="5">農曆初五</option><option value="6">農曆初六</option><option value="7">農曆初七</option><option value="8">農曆初八</option><option value="9">農曆初九</option><option value="10">農曆初十</option><option value="11">農曆十一</option><option value="12">農曆十二</option><option value="13">農曆十三</option><option value="14">農曆十四</option><option value="15">農曆十五</option><option value="16">農曆十六</option><option value="17">農曆十七</option><option value="18">農曆十八</option><option value="19">農曆十九</option><option value="20">農曆二十</option><option value="21">農曆廿一</option><option value="22">農曆廿二</option><option value="23">農曆廿三</option><option value="24">農曆廿四</option><option value="25">農曆廿五</option><option value="26">農曆廿六</option><option value="27">農曆廿七</option><option value="28">農曆廿八</option><option value="29">農曆廿九</option><option value="30">農曆三十</option>
+                                </select>
+                            </div>
+
+                            <!-- Custom Solar Day Selector (1-31, All days selectable) -->
+                            <div id="custom-solar-day-box" class="hidden pt-1">
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">選擇【國曆】固定日期 (每個月 1 ~ 31 號)</label>
+                                <select id="custom-solar-day-val" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                                    <option value="1">國曆 1 號</option><option value="2">國曆 2 號</option><option value="3">國曆 3 號</option><option value="4">國曆 4 號</option><option value="5">國曆 5 號</option><option value="6">國曆 6 號</option><option value="7">國曆 7 號</option><option value="8">國曆 8 號</option><option value="9">國曆 9 號</option><option value="10">國曆 10 號</option><option value="11">國曆 11 號</option><option value="12">國曆 12 號</option><option value="13">國曆 13 號</option><option value="14">國曆 14 號</option><option value="15">國曆 15 號</option><option value="16">國曆 16 號</option><option value="17">國曆 17 號</option><option value="18">國曆 18 號</option><option value="19">國曆 19 號</option><option value="20">國曆 20 號</option><option value="21">國曆 21 號</option><option value="22">國曆 22 號</option><option value="23">國曆 23 號</option><option value="24">國曆 24 號</option><option value="25">國曆 25 號</option><option value="26">國曆 26 號</option><option value="27">國曆 27 號</option><option value="28">國曆 28 號</option><option value="29">國曆 29 號</option><option value="30">國曆 30 號</option><option value="31">國曆 31 號</option>
+                                </select>
+                            </div>
+
+                            <div class="p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-xl text-[11px] text-indigo-800 leading-relaxed space-y-0.5">
+                                <p class="font-bold flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> 農家行事曆規則說明：</p>
+                                <p>• 完整支援<b>【農曆】</b>與<b>【國曆】</b>每個月循環設定。</p>
+                                <p>• 國曆日期開放 <b>1 至 31 號</b>全數可點選，並可搭配「提前天數」精準掌握行程！</p>
+                            </div>
+                        </div>
                     </div>
+
                     <div id="single-date-wrapper" class="hidden">
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-slate-700 font-bold">指定日期</label>
+                            <label class="text-slate-700 font-bold">指定日期類型</label>
                             <div class="space-x-2">
                                 <label class="cursor-pointer text-indigo-600 font-bold"><input type="radio" name="calendar-type" value="solar" checked onchange="toggleCalendarType()"> 國曆</label>
                                 <label class="cursor-pointer text-indigo-600 font-bold"><input type="radio" name="calendar-type" value="lunar" onchange="toggleCalendarType()"> 農曆</label>
@@ -188,7 +228,13 @@
                     </div>
                 </div>
 
-                <!-- 24-Hour Reminder Times (First) -->
+                <!-- Advance Days Offset -->
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1">提前幾天提醒 (0 表示當天)</label>
+                    <input type="number" id="event-advance-days" min="0" max="10" value="0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如前一天提醒請填 1">
+                </div>
+
+                <!-- 24-Hour Reminder Times -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="font-bold text-slate-700">24小時提醒時間與次數 (00-23 時)</label>
@@ -201,7 +247,7 @@
                     </div>
                 </div>
 
-                <!-- Max Notification Count (Second) - Default to 6 -->
+                <!-- Max Notification Count -->
                 <div>
                     <label class="block text-slate-700 font-bold mb-1">最大通知次數限制 (次)</label>
                     <input type="number" id="event-max-count" min="1" max="99" value="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="預設 6 次">
@@ -242,106 +288,169 @@
         </div>
     </div>
 
-    <script>
-        // --- Pre-configured State: 4 Independent Events (Lunar 1st, 15th, and Papaya 3 days prior) ---
-        let events = [
+    <!-- Firebase SDK & App Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Pre-configured 12-Month Recurring Events (Worship on Lunar 1st & 15th, Papaya Shipping 3 days prior: Lunar 28th and 12th)
+        const defaultEvents = [
             {
-                id: '1',
-                title: '🏮 農曆初一拜拜',
+                id: 'default-worship-1',
+                title: '🏮 爐主拜拜 (農曆初一)',
                 type: 'recurring',
-                solarDate: '',
-                calendarType: 'solar',
-                lunarMonth: 1,
-                lunarDay: 1,
+                recurringRule: 'lunar_1',
+                advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '06', minute: '00', label: '當天早上提醒' }
+                    { hour: '06', minute: '00', label: '農曆初一早上提醒' }
                 ],
-                desc: '農曆初一，請準備三牲四果拜拜祈福。'
+                desc: '【農曆】每月初一，請準備三牲四果拜拜祈福（全年12個月自動循環）。'
             },
             {
-                id: '2',
-                title: '🏮 農曆十五拜拜',
+                id: 'default-worship-15',
+                title: '🏮 爐主拜拜 (農曆十五)',
                 type: 'recurring',
-                solarDate: '',
-                calendarType: 'solar',
-                lunarMonth: 1,
-                lunarDay: 15,
+                recurringRule: 'lunar_15',
+                advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '06', minute: '00', label: '當天早上提醒' }
+                    { hour: '06', minute: '00', label: '農曆十五早上提醒' }
                 ],
-                desc: '農曆十五，請準備澎湃供品拜拜祈福。'
+                desc: '【農曆】每月十五，請準備澎湃供品拜拜祈福（全年12個月自動循環）。'
             },
             {
-                id: '3',
-                title: '🍈 木瓜出貨預備 (初一前3天)',
+                id: 'default-papaya-1',
+                title: '🍈 木瓜出貨預備 (農曆初一前3天)',
                 type: 'recurring',
-                solarDate: '',
-                calendarType: 'solar',
-                lunarMonth: 1,
-                lunarDay: 27, // Lunar 27 is 3 days before Lunar 1 of next month
+                recurringRule: 'lunar_28',
+                advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '19', minute: '00', label: '提前3天晚上通知' }
+                    { hour: '19', minute: '00', label: '農曆初一前3天晚上通知' }
                 ],
-                desc: '農曆初一前三天，請準備木瓜出貨與宅配裝箱！'
+                desc: '【農曆】初一前三天 (農曆廿八)，請準備木瓜出貨與宅配裝箱（全年12個月自動循環）。'
             },
             {
-                id: '4',
-                title: '🍈 木瓜出貨預備 (十五前3天)',
+                id: 'default-papaya-15',
+                title: '🍈 木瓜出貨預備 (農曆十五前3天)',
                 type: 'recurring',
-                solarDate: '',
-                calendarType: 'solar',
-                lunarMonth: 1,
-                lunarDay: 12, // Lunar 12 is 3 days before Lunar 15
+                recurringRule: 'lunar_12',
+                advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '19', minute: '00', label: '提前3天晚上通知' }
+                    { hour: '19', minute: '00', label: '農曆十五前3天晚上通知' }
                 ],
-                desc: '農曆十五前三天，請準備木瓜出貨與宅配裝箱！'
+                desc: '【農曆】十五前三天 (農曆十二)，請準備木瓜出貨與宅配裝箱（全年12個月自動循環）。'
             }
         ];
 
+        let events = [];
         let currentCalendarYear = new Date().getFullYear();
         let currentCalendarMonth = new Date().getMonth();
         let lastTriggeredMinuteKey = '';
 
-        window.onload = function() {
+        let db, auth, appId, userId;
+
+        window.addEventListener('DOMContentLoaded', async () => {
             updateClock();
             setInterval(updateClock, 1000);
             setInterval(checkAlarms, 10000);
-            renderEvents();
-            renderInteractiveCalendar();
 
-            // Request Notification Permission
+            try {
+                appId = typeof __app_id !== 'undefined' ? __app_id : 'mountain-ade-reminder';
+                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+                    apiKey: "AIzaSyDummyKeyForGitHubPreview",
+                    projectId: "mountain-ade-reminder"
+                };
+
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                userId = auth.currentUser?.uid || 'local-user-' + Math.random().toString(36).substring(2, 9);
+                
+                const userEventsColRef = collection(db, 'artifacts', appId, 'users', userId, 'reminders');
+                
+                onSnapshot(userEventsColRef, (snapshot) => {
+                    const loadedEvents = [];
+                    snapshot.forEach(docSnap => {
+                        loadedEvents.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+
+                    if (loadedEvents.length === 0) {
+                        defaultEvents.forEach(async (ev) => {
+                            await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', ev.id), ev);
+                        });
+                        events = defaultEvents;
+                    } else {
+                        events = loadedEvents;
+                    }
+
+                    renderEvents();
+                    renderInteractiveCalendar();
+                    document.getElementById('sync-status').classList.remove('hidden');
+                }, (error) => {
+                    console.log("Firestore offline mode / fallback:", error);
+                    events = defaultEvents;
+                    renderEvents();
+                    renderInteractiveCalendar();
+                });
+
+            } catch (err) {
+                console.log("Using local state mode:", err);
+                events = defaultEvents;
+                renderEvents();
+                renderInteractiveCalendar();
+            }
+
             if ('Notification' in window && Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
-        };
+        });
 
-        // --- Audio & Voice Synthesis ---
+        window.openEventModal = openEventModal;
+        window.closeEventModal = closeEventModal;
+        window.onEventTypeChanged = onEventTypeChanged;
+        window.onRecurringRuleChanged = onRecurringRuleChanged;
+        window.toggleCalendarType = toggleCalendarType;
+        window.addReminderRow = addReminderRow;
+        window.saveEvent = saveEvent;
+        window.editEvent = editEvent;
+        window.deleteEvent = deleteEvent;
+        window.exportToICS = exportToICS;
+        window.simulateAlarmTrigger = simulateAlarmTrigger;
+        window.dismissAlarm = dismissAlarm;
+        window.stopAlarmAndSnooze = stopAlarmAndSnooze;
+        window.changeMonth = changeMonth;
+        window.goToCurrentMonth = goToCurrentMonth;
+
         function playChime() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2); // A5
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2);
                 gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.8);
-            } catch(e) {
-                console.log('Audio context not allowed yet');
-            }
+            } catch(e) {}
         }
 
         function speakVoice(text) {
@@ -353,40 +462,6 @@
                 utterance.pitch = 1.0;
                 window.speechSynthesis.speak(utterance);
             }
-        }
-
-        // --- Accurate Lunar Calendar Calculation (Verified: 2026-10-27 is 丙午年九月十八日) ---
-        function getLunarDateInfo(date) {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-
-            if (year === 2026 && month === 10 && day === 27) {
-                return { lunarYear: '丙午', lunarMonthName: '九月', lunarDayName: '十八日', lunarMonthNum: 9, lunarDayNum: 18, lunarYearNum: 2026 };
-            }
-
-            const dayNames = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
-            const monthNames = ['正','二','三','四','五','六','七','八','九','十','冬','臘'];
-            
-            const targetTime = date.getTime();
-            const baseDate = new Date(2026, 9, 27).getTime();
-            const diffDays = Math.round((targetTime - baseDate) / (1000 * 60 * 60 * 24));
-            
-            let lDay = 18 + diffDays;
-            let lMonth = 9;
-            let lYear = 2026;
-
-            while (lDay > 30) { lDay -= 30; lMonth++; if (lMonth > 12) { lMonth = 1; lYear++; } }
-            while (lDay < 1) { lDay += 30; lMonth--; if (lMonth < 1) { lMonth = 12; lYear--; } }
-
-            return {
-                lunarYear: '丙午',
-                lunarMonthName: monthNames[lMonth - 1] + '月',
-                lunarDayName: dayNames[lDay - 1],
-                lunarMonthNum: lMonth,
-                lunarDayNum: lDay,
-                lunarYearNum: lYear
-            };
         }
 
         function updateClock() {
@@ -401,15 +476,60 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
-            const lunar = getLunarDateInfo(now);
+            let lunarStr = "農曆計算中";
+            try {
+                const solar = Solar.fromDate(now);
+                const lunar = solar.getLunar();
+                lunarStr = `農曆${lunar.getYearInChinese()}年${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}`;
+            } catch(e) {}
 
-            // Three separate lines for Date & Time as requested
             document.getElementById('current-solar-date-str').innerText = `${year}年${month}月${date}日(${weekday})`;
-            document.getElementById('current-lunar-date-str').innerText = `農曆${lunar.lunarYearNum}年${lunar.lunarMonthName}${lunar.lunarDayName}`;
+            document.getElementById('current-lunar-date-str').innerText = lunarStr;
             document.getElementById('current-time-str').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
-        // --- Real-time Alarm Checker ---
+        function checkEventMatch(ev, targetDate) {
+            try {
+                const solar = Solar.fromDate(targetDate);
+                const lunar = solar.getLunar();
+                const lunarDay = lunar.getDay(); // 1~30
+                const solarDay = targetDate.getDate(); // 1~31
+                const advanceDays = ev.advanceDays || 0;
+
+                let checkDate = new Date(targetDate.getTime());
+                checkDate.setDate(checkDate.getDate() + advanceDays);
+                const checkSolar = Solar.fromDate(checkDate);
+                const checkLunar = checkSolar.getLunar();
+                const checkLunarDay = checkLunar.getDay();
+                const checkSolarDay = checkDate.getDate();
+
+                if (ev.type === 'recurring') {
+                    if (ev.recurringRule === 'lunar_1' && checkLunarDay === 1) return true;
+                    if (ev.recurringRule === 'lunar_15' && checkLunarDay === 15) return true;
+                    if (ev.recurringRule === 'lunar_28' && checkLunarDay === 28) return true; // Lunar 1st minus 3 days = Lunar 28
+                    if (ev.recurringRule === 'lunar_12' && checkLunarDay === 12) return true; // Lunar 15th minus 3 days = Lunar 12
+                    if (ev.recurringRule === 'custom_lunar_day' && checkLunarDay === parseInt(ev.customLunarDay || 1)) return true;
+                    if (ev.recurringRule === 'custom_solar_day' && checkSolarDay === parseInt(ev.customSolarDay || 1)) return true;
+                    if (ev.recurringRule === 'monthly_last_fri') {
+                        const y = checkDate.getFullYear();
+                        const m = checkDate.getMonth();
+                        const lastDay = new Date(y, m + 1, 0).getDate();
+                        let lastFri = lastDay;
+                        while (new Date(y, m, lastFri).getDay() !== 5) lastFri--;
+                        if (checkDate.getDate() === lastFri) return true;
+                    }
+                } else if (ev.type === 'single') {
+                    const solarStr = `${targetDate.getFullYear()}-${String(targetDate.getMonth()+1).padStart(2,'0')}-${String(targetDate.getDate()).padStart(2,'0')}`;
+                    if (ev.calendarType === 'solar') {
+                        if (ev.solarDate === solarStr) return true;
+                    } else {
+                        if (lunar.getMonth() == ev.lunarMonth && lunarDay == ev.lunarDay) return true;
+                    }
+                }
+            } catch(e) {}
+            return false;
+        }
+
         function checkAlarms() {
             const now = new Date();
             const year = now.getFullYear();
@@ -423,35 +543,20 @@
 
             if (currentHMKey === lastTriggeredMinuteKey) return;
 
-            const lunar = getLunarDateInfo(now);
-
             events.forEach(ev => {
                 if (ev.maxCount && ev.triggeredCount >= ev.maxCount) return;
+                if (!ev.reminders || !Array.isArray(ev.reminders)) return;
 
                 ev.reminders.forEach(r => {
                     if (r.hour === currentHour && r.minute === currentMinute) {
-                        let shouldTrigger = false;
-                        if (ev.type === 'recurring') {
-                            const isLunar1 = (lunar.lunarDayNum === 1);
-                            const isLunar15 = (lunar.lunarDayNum === 15);
-                            const isLunarMinus3For1 = (lunar.lunarDayNum === 27);
-                            const isLunarMinus3For15 = (lunar.lunarDayNum === 12);
-
-                            if (ev.title.includes('初一拜拜') && isLunar1) shouldTrigger = true;
-                            else if (ev.title.includes('十五拜拜') && isLunar15) shouldTrigger = true;
-                            else if (ev.title.includes('初一前3天') && isLunarMinus3For1) shouldTrigger = true;
-                            else if (ev.title.includes('十五前3天') && isLunarMinus3For15) shouldTrigger = true;
-                        } else if (ev.type === 'single') {
-                            if (ev.calendarType === 'solar') {
-                                if (ev.solarDate === todaySolarStr) shouldTrigger = true;
-                            } else {
-                                if (ev.lunarMonth == lunar.lunarMonthNum && ev.lunarDay == lunar.lunarDayNum) shouldTrigger = true;
-                            }
-                        }
-
-                        if (shouldTrigger) {
+                        if (checkEventMatch(ev, now)) {
                             lastTriggeredMinuteKey = currentHMKey;
                             ev.triggeredCount = (ev.triggeredCount || 0) + 1;
+                            
+                            if (db && auth && userId) {
+                                setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', ev.id), ev, { merge: true }).catch(err => console.log(err));
+                            }
+
                             renderEvents();
                             renderInteractiveCalendar();
                             triggerAlarm(ev.title, `${r.label} (${r.hour}:${r.minute})：${ev.desc}`);
@@ -494,7 +599,6 @@
             alert('已設定 5 分鐘後重新提醒！');
         }
 
-        // --- Render Events List ---
         function renderEvents() {
             const container = document.getElementById('events-container');
             container.innerHTML = '';
@@ -510,13 +614,13 @@
             }
 
             events.forEach(ev => {
-                const typeBadge = ev.type === 'recurring' 
-                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 常規循環</span>`
-                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 單一事件 (${ev.calendarType === 'lunar' ? '農曆 ' + ev.lunarMonth + '月' + ev.lunarDay + '日' : ev.solarDate})</span>`;
+                let typeStr = ev.type === 'recurring' ? '常規循環 (每個月)' : '單一事件';
+                if (ev.advanceDays > 0) typeStr += ` (提前 ${ev.advanceDays} 天)`;
 
+                const typeBadge = `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-rotate mr-1"></i> ${typeStr}</span>`;
                 const countBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 已通知: ${ev.triggeredCount || 0} / ${ev.maxCount || 6} 次</span>`;
 
-                const remindersHtml = ev.reminders.map(r => `
+                const remindersHtml = (ev.reminders || []).map(r => `
                     <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold">
                         <i class="fa-solid fa-clock text-indigo-600"></i> ${r.hour}:${r.minute} - ${r.label}
                     </span>
@@ -525,7 +629,6 @@
                 const card = document.createElement('div');
                 card.className = "bg-white rounded-3xl p-5 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-indigo-200";
                 
-                // Left action buttons: Delete, Calendar Export, Test Alarm | Right: Edit (as requested)
                 card.innerHTML = `
                     <div class="flex items-center gap-2 self-start sm:self-center flex-wrap">
                         <button onclick="deleteEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除事件">
@@ -534,7 +637,7 @@
                         <button onclick="exportToICS('${ev.id}')" class="px-3 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition flex items-center gap-1.5 text-xs font-bold shadow-xs" title="下載行事曆檔案(.ics)">
                             <i class="fa-solid fa-calendar-plus text-indigo-600"></i> 匯入行事曆
                         </button>
-                        <button onclick="simulateAlarmTrigger('${ev.title}', '${ev.desc}')" class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition flex items-center justify-center text-xs shadow-xs" title="立即測試鬧鈴">
+                        <button onclick="simulateAlarmTrigger('${ev.title}', '${ev.desc || ''}')" class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition flex items-center justify-center text-xs shadow-xs" title="立即測試鬧鈴">
                             <i class="fa-solid fa-bell"></i>
                         </button>
                     </div>
@@ -551,7 +654,7 @@
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-center">
                         <button onclick="editEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="修改事件">
-                            <i class="fa-solid fa-pen"></i>
+                            <i class="fa-solid fa-pen"></i> 修改
                         </button>
                     </div>
                 `;
@@ -559,7 +662,6 @@
             });
         }
 
-        // --- Google Calendar Style Monthly Grid Renderer (Starts Monday, Sat/Sun Red) ---
         function changeMonth(direction) {
             currentCalendarMonth += direction;
             if (currentCalendarMonth > 11) {
@@ -585,8 +687,6 @@
             titleEl.innerText = `${currentCalendarYear}年 ${currentCalendarMonth + 1}月`;
             gridEl.innerHTML = '';
 
-            // JS getDay(): 0=Sun, 1=Mon, ..., 6=Sat
-            // Monday start: Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
             const firstDayRaw = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
             const firstDayIndex = (firstDayRaw === 0) ? 6 : firstDayRaw - 1;
 
@@ -596,35 +696,6 @@
             const today = new Date();
             const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-            function getEventsForDate(year, month, day) {
-                const targetDate = new Date(year, month, day);
-                const solarStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-                const lunar = getLunarDateInfo(targetDate);
-                const matched = [];
-
-                events.forEach(ev => {
-                    if (ev.type === 'recurring') {
-                        const isLunar1 = (lunar.lunarDayNum === 1);
-                        const isLunar15 = (lunar.lunarDayNum === 15);
-                        const isLunarMinus3For1 = (lunar.lunarDayNum === 27);
-                        const isLunarMinus3For15 = (lunar.lunarDayNum === 12);
-
-                        if (ev.title.includes('初一拜拜') && isLunar1) matched.push(ev);
-                        else if (ev.title.includes('十五拜拜') && isLunar15) matched.push(ev);
-                        else if (ev.title.includes('初一前3天') && isLunarMinus3For1) matched.push(ev);
-                        else if (ev.title.includes('十五前3天') && isLunarMinus3For15) matched.push(ev);
-                    } else if (ev.type === 'single') {
-                        if (ev.calendarType === 'solar') {
-                            if (ev.solarDate === solarStr) matched.push(ev);
-                        } else {
-                            if (ev.lunarMonth == lunar.lunarMonthNum && ev.lunarDay == lunar.lunarDayNum) matched.push(ev);
-                        }
-                    }
-                });
-                return { matched, lunar };
-            }
-
-            // Previous month trailing days
             for (let i = firstDayIndex - 1; i >= 0; i--) {
                 const dayNum = prevTotalDays - i;
                 const cell = document.createElement('div');
@@ -633,15 +704,28 @@
                 gridEl.appendChild(cell);
             }
 
-            // Current month days
             for (let d = 1; d <= totalDays; d++) {
                 const solarStr = `${currentCalendarYear}-${String(currentCalendarMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 const isToday = (solarStr === todayStr);
                 const targetDateObj = new Date(currentCalendarYear, currentCalendarMonth, d);
-                const dayOfWeek = targetDateObj.getDay(); // 0=Sun, 6=Sat
+                const dayOfWeek = targetDateObj.getDay();
                 const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
 
-                const { matched, lunar } = getEventsForDate(currentCalendarYear, currentCalendarMonth, d);
+                let lunarMonthName = "";
+                let lunarDayName = "";
+                try {
+                    const solar = Solar.fromDate(targetDateObj);
+                    const lunar = solar.getLunar();
+                    lunarMonthName = lunar.getMonthInChinese() + "月";
+                    lunarDayName = lunar.getDayInChinese();
+                } catch(e) {}
+
+                const matched = [];
+                events.forEach(ev => {
+                    if (checkEventMatch(ev, targetDateObj)) {
+                        matched.push(ev);
+                    }
+                });
 
                 const cell = document.createElement('div');
                 cell.className = `bg-white rounded-xl p-1.5 min-h-[90px] border transition flex flex-col justify-between ${isToday ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-100 hover:border-slate-200'}`;
@@ -650,8 +734,9 @@
                 matched.forEach(ev => {
                     const shortTitle = ev.title.length > 7 ? ev.title.slice(0, 7) + '..' : ev.title;
                     eventsHtml += `
-                        <div onclick="editEvent('${ev.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5 cursor-pointer transition" title="點擊修改: ${ev.title}">
-                            ${shortTitle}
+                        <div onclick="editEvent('${ev.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5 cursor-pointer transition flex items-center justify-between" title="點擊直接修改: ${ev.title}">
+                            <span>${shortTitle}</span>
+                            <i class="fa-solid fa-pen text-[9px] opacity-60"></i>
                         </div>
                     `;
                 });
@@ -663,7 +748,7 @@
                 cell.innerHTML = `
                     <div class="flex justify-between items-center">
                         <span class="text-xs ${dayNumClass}">${d}</span>
-                        <span class="text-[9px] text-slate-400 font-medium">${lunar.lunarMonthName}${lunar.lunarDayName}</span>
+                        <span class="text-[9px] text-slate-400 font-medium">${lunarMonthName}${lunarDayName}</span>
                     </div>
                     <div class="space-y-0.5 overflow-y-auto max-h-[55px]">
                         ${eventsHtml}
@@ -672,7 +757,6 @@
                 gridEl.appendChild(cell);
             }
 
-            // Next month leading days to complete grid slots (multiple of 7)
             const totalSlots = gridEl.children.length;
             const remainingSlots = totalSlots <= 35 ? 35 - totalSlots : 42 - totalSlots;
             for (let d = 1; d <= remainingSlots; d++) {
@@ -683,16 +767,11 @@
             }
         }
 
-        // --- ICS Calendar Export ---
         function exportToICS(id) {
             const ev = events.find(e => e.id === id);
             if (!ev) return;
 
             let targetDateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-            if (ev.type === 'single' && ev.calendarType === 'solar' && ev.solarDate) {
-                targetDateStr = ev.solarDate.replace(/-/g, '');
-            }
-
             const timeObj = ev.reminders[0] || { hour: '08', minute: '00' };
             const timeStr = `${timeObj.hour}${timeObj.minute}00`;
 
@@ -721,7 +800,6 @@
             alert(`已下載「${ev.title}」的行事曆檔案 (.ics)！點兩下即可加入手機內建行事曆。`);
         }
 
-        // --- Modal & Form Handling ---
         function openEventModal(eventId = null) {
             document.getElementById('event-modal').classList.remove('hidden');
             const container = document.getElementById('reminder-rules-container');
@@ -734,6 +812,10 @@
                     document.getElementById('event-id').value = ev.id;
                     document.getElementById('event-title').value = ev.title;
                     document.getElementById('event-type').value = ev.type;
+                    document.getElementById('recurring-rule').value = ev.recurringRule || 'lunar_1';
+                    document.getElementById('custom-lunar-day-val').value = ev.customLunarDay || 1;
+                    document.getElementById('custom-solar-day-val').value = ev.customSolarDay || 1;
+                    document.getElementById('event-advance-days').value = ev.advanceDays || 0;
                     document.getElementById('event-max-count').value = ev.maxCount || 6;
                     document.getElementById('event-desc').value = ev.desc || '';
                     
@@ -747,18 +829,20 @@
                     }
 
                     onEventTypeChanged();
+                    onRecurringRuleChanged();
                     toggleCalendarType();
-                    ev.reminders.forEach(r => addReminderRow(r.hour, r.minute, r.label));
+                    (ev.reminders || []).forEach(r => addReminderRow(r.hour, r.minute, r.label));
                 }
             } else {
                 document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-indigo-600"></i> 新增提醒事件';
                 document.getElementById('event-form').reset();
                 document.getElementById('event-id').value = '';
                 document.getElementById('event-max-count').value = 6;
+                document.getElementById('event-advance-days').value = 0;
                 document.querySelector('input[name="calendar-type"][value="solar"]').checked = true;
                 onEventTypeChanged();
+                onRecurringRuleChanged();
                 toggleCalendarType();
-                // Default to exactly 1 reminder time row as requested
                 addReminderRow('19', '00', '提醒通知');
             }
         }
@@ -770,11 +854,24 @@
         function onEventTypeChanged() {
             const type = document.getElementById('event-type').value;
             const singleWrapper = document.getElementById('single-date-wrapper');
+            const recurringWrapper = document.getElementById('recurring-settings-wrapper');
             if (type === 'recurring') {
                 singleWrapper.classList.add('hidden');
+                recurringWrapper.classList.remove('hidden');
             } else {
                 singleWrapper.classList.remove('hidden');
+                recurringWrapper.classList.add('hidden');
             }
+        }
+
+        function onRecurringRuleChanged() {
+            const rule = document.getElementById('recurring-rule').value;
+            const lunarBox = document.getElementById('custom-lunar-day-box');
+            const solarBox = document.getElementById('custom-solar-day-box');
+            lunarBox.classList.add('hidden');
+            solarBox.classList.add('hidden');
+            if (rule === 'custom_lunar_day') lunarBox.classList.remove('hidden');
+            if (rule === 'custom_solar_day') solarBox.classList.remove('hidden');
         }
 
         function toggleCalendarType() {
@@ -822,11 +919,15 @@
             container.appendChild(div);
         }
 
-        function saveEvent(e) {
+        async function saveEvent(e) {
             e.preventDefault();
-            const id = document.getElementById('event-id').value;
+            const id = document.getElementById('event-id').value || 'evt-' + Date.now();
             const title = document.getElementById('event-title').value;
             const type = document.getElementById('event-type').value;
+            const recurringRule = document.getElementById('recurring-rule').value;
+            const customLunarDay = document.getElementById('custom-lunar-day-val').value;
+            const customSolarDay = document.getElementById('custom-solar-day-val').value;
+            const advanceDays = parseInt(document.getElementById('event-advance-days').value) || 0;
             const maxCount = parseInt(document.getElementById('event-max-count').value) || 6;
             const desc = document.getElementById('event-desc').value;
 
@@ -844,36 +945,48 @@
                 if (hour && minute) reminders.push({ hour, minute, label });
             });
 
-            if (id) {
-                const index = events.findIndex(ev => ev.id === id);
-                if (index !== -1) {
-                    events[index] = { 
-                        ...events[index],
-                        title, type, maxCount, reminders, desc, calendarType, solarDate, lunarMonth, lunarDay
-                    };
+            const eventData = {
+                id, title, type, recurringRule, customLunarDay, customSolarDay, advanceDays, maxCount, triggeredCount: 0, reminders, desc, calendarType, solarDate, lunarMonth, lunarDay
+            };
+
+            if (db && auth && userId) {
+                try {
+                    await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', id), eventData);
+                } catch(err) {
+                    console.log("Firestore save error:", err);
                 }
             } else {
-                events.push({
-                    id: Date.now().toString(),
-                    title, type, maxCount, triggeredCount: 0, reminders, desc, calendarType, solarDate, lunarMonth, lunarDay
-                });
+                const index = events.findIndex(ev => ev.id === id);
+                if (index !== -1) {
+                    events[index] = eventData;
+                } else {
+                    events.push(eventData);
+                }
+                renderEvents();
+                renderInteractiveCalendar();
             }
 
             closeEventModal();
-            renderEvents();
-            renderInteractiveCalendar();
-            alert('提醒事件已成功儲存！');
+            alert('提醒事件已成功儲存並同步到您的私人雲端！');
         }
 
         function editEvent(id) {
             openEventModal(id);
         }
 
-        function deleteEvent(id) {
+        async function deleteEvent(id) {
             if (confirm('確定要刪除此提醒事件嗎？')) {
-                events = events.filter(e => e.id !== id);
-                renderEvents();
-                renderInteractiveCalendar();
+                if (db && auth && userId) {
+                    try {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', id));
+                    } catch(err) {
+                        console.log("Firestore delete error:", err);
+                    }
+                } else {
+                    events = events.filter(e => e.id !== id);
+                    renderEvents();
+                    renderInteractiveCalendar();
+                }
             }
         }
     </script>
