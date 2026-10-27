@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LunaPapaya Reminder - 智慧提醒管家</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,6 +15,7 @@
     <style>
         body {
             font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         .app-gradient {
             background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
@@ -39,45 +40,40 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
     <!-- Top Header -->
-    <header class="app-gradient text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-sm border border-white/30 text-2xl animate-bounce-slow">
+    <header class="app-gradient text-white shadow-lg sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-4 py-3.5 flex justify-between items-center gap-2">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-white/20 p-2 rounded-2xl backdrop-blur-sm border border-white/30 text-xl animate-bounce-slow">
                     🔔
                 </div>
                 <div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow">LunaPapaya Reminder</h1>
-                        <span class="bg-white/25 text-indigo-50 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">✨ 24小時制智慧提醒</span>
-                    </div>
-                    <p class="text-xs sm:text-sm text-indigo-100 font-medium">自訂事件主題 • 國曆農曆循環 • 次數限制控制 • 語音播報</p>
+                    <h1 class="text-base sm:text-xl font-black tracking-wide drop-shadow">LunaPapaya Reminder</h1>
+                    <p class="text-[11px] sm:text-xs text-indigo-100 font-medium">智慧鬧鈴 • 國曆農曆 • 一鍵行事曆</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/20 text-right">
-                    <div id="current-date-str" class="text-xs font-bold text-indigo-100">載入日期中...</div>
-                    <div id="current-time-str" class="text-lg font-black tracking-wider text-white">00:00:00</div>
-                </div>
+            <div class="bg-white/10 px-3 py-1.5 rounded-2xl border border-white/20 text-right">
+                <div id="current-date-str" class="text-[10px] sm:text-xs font-bold text-indigo-100">載入日期中...</div>
+                <div id="current-time-str" class="text-sm sm:text-base font-black tracking-wider text-white">00:00:00</div>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow space-y-5">
         
         <!-- Controls & Add Button Bar -->
-        <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="bg-white rounded-3xl p-5 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-                <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-list-check text-indigo-600"></i> 事件提醒清單
+                <h2 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-indigo-600"></i> 事件提醒清單
                 </h2>
-                <p class="text-xs text-slate-500 mt-0.5">自訂任何生活大小事、拜拜或出貨排程，時間到自動語音播報與彈出鬧鈴！</p>
+                <p class="text-xs text-slate-500 mt-0.5">自訂大小事與拜拜出貨排程，時間到自動語音播報與彈出鬧鈴！</p>
             </div>
-            <button onclick="openEventModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center gap-2">
-                <i class="fa-solid fa-plus"></i> 新增自訂提醒事件
+            <button onclick="openEventModal()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-plus"></i> 新增提醒事件
             </button>
         </div>
 
@@ -110,21 +106,21 @@
                 <input type="hidden" id="event-id">
                 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱 (完全自訂)</label>
-                    <input type="text" id="event-title" required placeholder="例如：爐主初一拜拜 / 木瓜出貨 / 拜訪姑丈" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱 (自訂)</label>
+                    <input type="text" id="event-title" required placeholder="例如：爐主初一拜拜 / 木瓜出貨 / 拜訪姑丈" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-700 font-bold mb-1">事件類型規則</label>
-                        <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
-                            <option value="lunar_recurring">農曆常規循環 (如：初一、十五)</option>
-                            <option value="gregorian_single">國曆特定單一日期 (如：指定年月日)</option>
+                        <label class="block text-slate-700 font-bold mb-1">事件規則類型</label>
+                        <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                            <option value="lunar_recurring">1. 常規循環 (農曆初一/十五)</option>
+                            <option value="gregorian_single">2. 特定單一事件 (國曆指定日期)</option>
                         </select>
                     </div>
                     <div id="lunar-rule-wrapper">
-                        <label class="block text-slate-700 font-bold mb-1">農曆循環設定</label>
-                        <select id="lunar-rule-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                        <label class="block text-slate-700 font-bold mb-1">農曆循環方式</label>
+                        <select id="lunar-rule-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                             <option value="1_and_15">農曆初一與十五 (當天)</option>
                             <option value="minus_3_days">農曆初一與十五的前 3 天 (出貨排程)</option>
                             <option value="minus_1_day">農曆初一與十五的前 1 天 (前一晚預備)</option>
@@ -132,18 +128,18 @@
                     </div>
                     <div id="solar-date-wrapper" class="hidden">
                         <label class="block text-slate-700 font-bold mb-1">指定國曆日期</label>
-                        <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                        <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-slate-700 font-bold mb-1">最大通知次數限制 (避免無限提醒)</label>
-                    <input type="number" id="event-max-count" min="1" max="99" value="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如：3次">
+                    <input type="number" id="event-max-count" min="1" max="99" value="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如：3次">
                 </div>
 
                 <div>
                     <div class="flex justify-between items-center mb-1">
-                        <label class="font-bold text-slate-700">24 小時制提醒時間與次數 (00-23 時)</label>
+                        <label class="font-bold text-slate-700">24小時提醒時間與次數 (00-23 時)</label>
                         <button type="button" onclick="addReminderRow()" class="text-indigo-600 hover:text-indigo-700 font-bold flex items-center gap-1">
                             <i class="fa-solid fa-plus-circle"></i> 增加時間
                         </button>
@@ -155,12 +151,12 @@
 
                 <div>
                     <label class="block text-slate-700 font-bold mb-1">語音播報與詳細備註內容</label>
-                    <textarea id="event-desc" rows="2" placeholder="當鬧鈴響起時，語音將會唸出或顯示此詳細內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-indigo-500"></textarea>
+                    <textarea id="event-desc" rows="2" placeholder="當鬧鈴響起時，語音將會唸出或顯示此詳細內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end gap-2">
-                    <button type="button" onclick="closeEventModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl transition">取消</button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition">儲存事件</button>
+                    <button type="button" onclick="closeEventModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-3 rounded-xl transition">取消</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-xl shadow-md transition">儲存事件</button>
                 </div>
             </form>
         </div>
@@ -330,11 +326,10 @@
 
             const lunar = getLunarDay(now);
             const isLunar1or15 = (lunar.lunarDay === 1 || lunar.lunarDay === 15);
-            const isLunarMinus3 = (lunar.lunarDay === 27 || lunar.lunarDay === 12); // 3 days before 1st/15th
-            const isLunarMinus1 = (lunar.lunarDay === 29 || lunar.lunarDay === 14); // 1 day before 1st/15th
+            const isLunarMinus3 = (lunar.lunarDay === 27 || lunar.lunarDay === 12);
+            const isLunarMinus1 = (lunar.lunarDay === 29 || lunar.lunarDay === 14);
 
             events.forEach(ev => {
-                // Check if max count exceeded
                 if (ev.maxCount && ev.triggeredCount >= ev.maxCount) return;
 
                 ev.reminders.forEach(r => {
@@ -409,8 +404,8 @@
 
             events.forEach(ev => {
                 const typeBadge = ev.type === 'lunar_recurring' 
-                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 農曆常規循環</span>`
-                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 國曆單一日期 (${ev.solarDate})</span>`;
+                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 1. 常規循環</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 2. 特定單一事件 (${ev.solarDate})</span>`;
 
                 const countBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 已通知: ${ev.triggeredCount || 0} / ${ev.maxCount || '∞'} 次</span>`;
 
@@ -517,8 +512,8 @@
                 document.getElementById('event-id').value = '';
                 document.getElementById('event-max-count').value = 3;
                 onEventTypeChanged();
-                addReminderRow('19', '00', '前一晚提醒');
-                addReminderRow('06', '00', '當天早上提醒');
+                // Default to 1 reminder time as requested
+                addReminderRow('19', '00', '提醒通知');
             }
         }
 
@@ -542,14 +537,12 @@
         function addReminderRow(hourVal = '08', minuteVal = '00', labelVal = '提醒通知') {
             const container = document.getElementById('reminder-rules-container');
             
-            // Generate 24-hour options (00-23)
             let hoursOptions = '';
             for (let h = 0; h < 24; h++) {
                 const hs = String(h).padStart(2, '0');
                 hoursOptions += `<option value="${hs}" ${hs === hourVal ? 'selected' : ''}>${hs} 時</option>`;
             }
 
-            // Generate minutes options (00-59)
             let minutesOptions = '';
             for (let m = 0; m < 60; m += 5) {
                 const ms = String(m).padStart(2, '0');
@@ -562,13 +555,13 @@
             const div = document.createElement('div');
             div.className = "flex items-center gap-2 reminder-row bg-slate-50 p-2 rounded-2xl border border-slate-200";
             div.innerHTML = `
-                <select class="reminder-hour bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                <select class="reminder-hour bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-indigo-500">
                     ${hoursOptions}
                 </select>
-                <select class="reminder-minute bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                <select class="reminder-minute bg-white border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold focus:outline-none focus:border-indigo-500">
                     ${minutesOptions}
                 </select>
-                <input type="text" value="${labelVal}" placeholder="提醒標籤 (例: 晚上提醒)" class="reminder-label flex-grow bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-indigo-500">
+                <input type="text" value="${labelVal}" placeholder="提醒標籤 (例: 晚上提醒)" class="reminder-label flex-grow bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-indigo-500">
                 <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-rose-600 p-2">
                     <i class="fa-solid fa-trash-can text-xs"></i>
                 </button>
