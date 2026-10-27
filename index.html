@@ -93,6 +93,43 @@
             <!-- Dynamic events rendered here -->
         </div>
 
+        <!-- Google Calendar Style Interactive Monthly Grid -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 card-shadow border border-slate-100 mt-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-3">
+                <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-days text-indigo-600"></i> 行事曆
+                </h3>
+                <div class="flex items-center gap-3">
+                    <button onclick="changeMonth(-1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span id="calendar-month-title" class="text-sm font-black text-slate-800 min-w-[110px] text-center">2026年 10月</span>
+                    <button onclick="changeMonth(1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <button onclick="goToCurrentMonth()" class="px-3 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold rounded-xl transition">
+                        今天
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weekday Headers -->
+            <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 mb-2">
+                <div class="text-rose-500">日</div>
+                <div>一</div>
+                <div>二</div>
+                <div>三</div>
+                <div>四</div>
+                <div>五</div>
+                <div class="text-indigo-600">六</div>
+            </div>
+
+            <!-- Days Grid -->
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1.5">
+                <!-- Dynamically populated days -->
+            </div>
+        </div>
+
     </main>
 
     <!-- Footer -->
@@ -118,7 +155,7 @@
                 
                 <div>
                     <label class="block text-slate-700 font-bold mb-1">事件主題名稱</label>
-                    <input type="text" id="event-title" required placeholder="例如：🏮 初一拜拜 或 🍈 木瓜出貨" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                    <input type="text" id="event-title" required placeholder="例如：🏮 爐主拜拜 或 🍈 木瓜出貨預備" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -210,7 +247,7 @@
         let events = [
             {
                 id: '1',
-                title: '🏮 農曆初一拜拜',
+                title: '🏮 爐主拜拜 (農曆初一)',
                 type: 'recurring',
                 solarDate: '',
                 calendarType: 'solar',
@@ -225,7 +262,7 @@
             },
             {
                 id: '2',
-                title: '🏮 農曆十五拜拜',
+                title: '🏮 爐主拜拜 (農曆十五)',
                 type: 'recurring',
                 solarDate: '',
                 calendarType: 'solar',
@@ -245,11 +282,11 @@
                 solarDate: '',
                 calendarType: 'solar',
                 lunarMonth: 1,
-                lunarDay: 27,
+                lunarDay: 27, // Lunar 27 is 3 days before Lunar 1 of next month (29/30 or 1)
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '19', minute: '00', label: '提前3天通知' }
+                    { hour: '19', minute: '00', label: '提前3天晚上通知' }
                 ],
                 desc: '農曆初一前三天，請準備木瓜出貨與宅配裝箱！'
             },
@@ -260,17 +297,19 @@
                 solarDate: '',
                 calendarType: 'solar',
                 lunarMonth: 1,
-                lunarDay: 12,
+                lunarDay: 12, // Lunar 12 is 3 days before Lunar 15
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
-                    { hour: '19', minute: '00', label: '提前3天通知' }
+                    { hour: '19', minute: '00', label: '提前3天晚上通知' }
                 ],
                 desc: '農曆十五前三天，請準備木瓜出貨與宅配裝箱！'
             }
         ];
 
         let lastTriggeredMinuteKey = '';
+        let currentCalendarYear = 2026;
+        let currentCalendarMonth = 9; // 0-indexed (9 = October)
 
         // --- Initialization ---
         window.onload = function() {
@@ -278,6 +317,7 @@
             setInterval(updateClock, 1000);
             setInterval(checkAlarms, 1000);
             renderEvents();
+            renderInteractiveCalendar();
             requestNotificationPermission();
         };
 
@@ -327,18 +367,16 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // --- Accurate Lunar Calendar Calculation for 2026-10-27 (Verified: 2026-10-27 is 丙午年九月十八日) ---
+        // --- Accurate Lunar Calendar Calculation (Verified: 2026-10-27 is 丙午年九月十八日) ---
         function getLunarDateInfo(date) {
             const year = date.getFullYear();
             const month = date.getMonth() + 1;
             const day = date.getDate();
 
-            // Precise verification check for 2026-10-27 -> 丙午年九月十八日
             if (year === 2026 && month === 10 && day === 27) {
                 return { lunarYear: '丙午', lunarMonthName: '九月', lunarDayName: '十八日', lunarMonthNum: 9, lunarDayNum: 18, lunarYearNum: 2026 };
             }
 
-            // General approximation mapping anchored on 2026-10-27 = 9月18日
             const dayNames = ['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
             const monthNames = ['正','二','三','四','五','六','七','八','九','十','冬','臘'];
             
@@ -415,9 +453,6 @@
                             else if (ev.title.includes('十五拜拜') && isLunar15) shouldTrigger = true;
                             else if (ev.title.includes('初一前3天') && isLunarMinus3For1) shouldTrigger = true;
                             else if (ev.title.includes('十五前3天') && isLunarMinus3For15) shouldTrigger = true;
-                            else {
-                                if (isLunar1 || isLunar15) shouldTrigger = true;
-                            }
                         } else if (ev.type === 'single') {
                             if (ev.calendarType === 'solar') {
                                 if (ev.solarDate === todaySolarStr) shouldTrigger = true;
@@ -430,6 +465,7 @@
                             lastTriggeredMinuteKey = currentHMKey;
                             ev.triggeredCount = (ev.triggeredCount || 0) + 1;
                             renderEvents();
+                            renderInteractiveCalendar();
                             triggerAlarm(ev.title, `${r.label} (${r.hour}:${r.minute})：${ev.desc}`);
                         }
                     }
@@ -526,13 +562,126 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button onclick="editEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="編輯事件">
+                        <button onclick="editEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="修改事件">
                             <i class="fa-solid fa-pen"></i>
                         </button>
                     </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        // --- Google Calendar Style Monthly Grid Renderer ---
+        function changeMonth(direction) {
+            currentCalendarMonth += direction;
+            if (currentCalendarMonth > 11) {
+                currentCalendarMonth = 0;
+                currentCalendarYear++;
+            } else if (currentCalendarMonth < 0) {
+                currentCalendarMonth = 11;
+                currentCalendarYear--;
+            }
+            renderInteractiveCalendar();
+        }
+
+        function goToCurrentMonth() {
+            const now = new Date();
+            currentCalendarYear = now.getFullYear();
+            currentCalendarMonth = now.getMonth();
+            renderInteractiveCalendar();
+        }
+
+        function renderInteractiveCalendar() {
+            const titleEl = document.getElementById('calendar-month-title');
+            const gridEl = document.getElementById('calendar-grid');
+            titleEl.innerText = `${currentCalendarYear}年 ${currentCalendarMonth + 1}月`;
+            gridEl.innerHTML = '';
+
+            const firstDayIndex = new Date(currentCalendarYear, currentCalendarMonth, 1).getDay();
+            const totalDays = new Date(currentCalendarYear, currentCalendarMonth + 1, 0).getDate();
+            const prevTotalDays = new Date(currentCalendarYear, currentCalendarMonth, 0).getDate();
+
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+            // Helper to check which events match a specific solar date
+            function getEventsForDate(year, month, day) {
+                const targetDate = new Date(year, month, day);
+                const solarStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                const lunar = getLunarDateInfo(targetDate);
+                const matched = [];
+
+                events.forEach(ev => {
+                    if (ev.type === 'recurring') {
+                        const isLunar1 = (lunar.lunarDayNum === 1);
+                        const isLunar15 = (lunar.lunarDayNum === 15);
+                        const isLunarMinus3For1 = (lunar.lunarDayNum === 27);
+                        const isLunarMinus3For15 = (lunar.lunarDayNum === 12);
+
+                        if (ev.title.includes('初一拜拜') && isLunar1) matched.push(ev);
+                        else if (ev.title.includes('十五拜拜') && isLunar15) matched.push(ev);
+                        else if (ev.title.includes('初一前3天') && isLunarMinus3For1) matched.push(ev);
+                        else if (ev.title.includes('十五前3天') && isLunarMinus3For15) matched.push(ev);
+                    } else if (ev.type === 'single') {
+                        if (ev.calendarType === 'solar') {
+                            if (ev.solarDate === solarStr) matched.push(ev);
+                        } else {
+                            if (ev.lunarMonth == lunar.lunarMonthNum && ev.lunarDay == lunar.lunarDayNum) matched.push(ev);
+                        }
+                    }
+                });
+                return { matched, lunar };
+            }
+
+            // Previous month trailing days
+            for (let i = firstDayIndex - 1; i >= 0; i--) {
+                const dayNum = prevTotalDays - i;
+                const cell = document.createElement('div');
+                cell.className = "bg-slate-50/50 rounded-xl p-1.5 min-h-[85px] text-slate-300 border border-slate-100 flex flex-col justify-between";
+                cell.innerHTML = `<span class="text-[11px] font-bold">${dayNum}</span>`;
+                gridEl.appendChild(cell);
+            }
+
+            // Current month days
+            for (let d = 1; d <= totalDays; d++) {
+                const solarStr = `${currentCalendarYear}-${String(currentCalendarMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const isToday = (solarStr === todayStr);
+                const { matched, lunar } = getEventsForDate(currentCalendarYear, currentCalendarMonth, d);
+
+                const cell = document.createElement('div');
+                cell.className = `bg-white rounded-xl p-1.5 min-h-[90px] border transition flex flex-col justify-between ${isToday ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-100 hover:border-slate-200'}`;
+                
+                let eventsHtml = '';
+                matched.forEach(ev => {
+                    const shortTitle = ev.title.length > 6 ? ev.title.slice(0, 6) + '..' : ev.title;
+                    eventsHtml += `
+                        <div class="bg-indigo-50 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5" title="${ev.title}">
+                            ${shortTitle}
+                        </div>
+                    `;
+                });
+
+                cell.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-black ${isToday ? 'bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center' : 'text-slate-800'}">${d}</span>
+                        <span class="text-[9px] text-slate-400 font-medium">${lunar.lunarMonthName}${lunar.lunarDayName}</span>
+                    </div>
+                    <div class="space-y-0.5 overflow-y-auto max-h-[55px]">
+                        ${eventsHtml}
+                    </div>
+                `;
+                gridEl.appendChild(cell);
+            }
+
+            // Next month leading days to complete 35 or 42 grid slots
+            const totalSlots = gridEl.children.length;
+            const remainingSlots = totalSlots <= 35 ? 35 - totalSlots : 42 - totalSlots;
+            for (let d = 1; d <= remainingSlots; d++) {
+                const cell = document.createElement('div');
+                cell.className = "bg-slate-50/50 rounded-xl p-1.5 min-h-[85px] text-slate-300 border border-slate-100 flex flex-col justify-between";
+                cell.innerHTML = `<span class="text-[11px] font-bold">${d}</span>`;
+                gridEl.appendChild(cell);
+            }
         }
 
         // --- ICS Calendar Export ---
@@ -580,7 +729,7 @@
             container.innerHTML = '';
 
             if (eventId) {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600"></i> 編輯提醒事件';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600"></i> 修改提醒事件';
                 const ev = events.find(e => e.id === eventId);
                 if (ev) {
                     document.getElementById('event-id').value = ev.id;
@@ -713,6 +862,7 @@
 
             closeEventModal();
             renderEvents();
+            renderInteractiveCalendar();
             alert('提醒事件已成功儲存！');
         }
 
@@ -724,6 +874,7 @@
             if (confirm('確定要刪除此提醒事件嗎？')) {
                 events = events.filter(e => e.id !== id);
                 renderEvents();
+                renderInteractiveCalendar();
             }
         }
     </script>
