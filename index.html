@@ -81,12 +81,9 @@
                 <h2 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-bell text-indigo-600"></i> 事件提醒清單
                 </h2>
-                <p class="text-xs text-slate-500 mt-0.5">保持網頁分頁在背景開啟，時間到自動語音播報與彈出鬧鈴！</p>
+                <p class="text-xs text-slate-500 mt-0.5">保持網頁分頁在背景開啟，時間到自動語音播報與彈出鬧鈴！資料儲存於本機瀏覽器中。</p>
             </div>
             <div class="flex items-center gap-2 w-full sm:w-auto">
-                <div id="sync-status" class="hidden sm:flex items-center gap-1.5 text-[11px] text-emerald-600 font-bold bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-200">
-                    <i class="fa-solid fa-cloud-arrow-up animate-pulse"></i> 私人雲端同步
-                </div>
                 <button onclick="openEventModal()" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-plus"></i> 新增提醒事件
                 </button>
@@ -101,9 +98,12 @@
         <!-- Interactive Monthly Grid (Monday Start, Weekend Red) -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 card-shadow border border-slate-100 mt-8">
             <div class="flex flex-col sm:flex-row items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-3">
-                <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-days text-indigo-600"></i> 行事曆
-                </h3>
+                <div>
+                    <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-indigo-600"></i> 行事曆
+                    </h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">點擊行事曆上的「事件標籤」可直接修改提醒時間與內容；點擊「日期數字」可快速新增當天事件！</p>
+                </div>
                 <div class="flex items-center gap-3">
                     <button onclick="changeMonth(-1)" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold flex items-center justify-center transition">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -139,7 +139,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 mt-12 text-center text-xs">
-        <p class="mb-1">山上阿德提醒小幫手 • 農家行事曆管家系統 (Private Cloud Sync)</p>
+        <p class="mb-1">山上阿德提醒小幫手 • 農家行事曆管家系統 (Local Storage Mode)</p>
         <p>© 2026 All rights reserved. 輕鬆管理個人大小事，永不遺忘重要時刻！</p>
     </footer>
 
@@ -165,18 +165,20 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-700 font-bold mb-1">事件規則類型</label>
+                        <label class="block text-slate-700 font-bold mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-rotate text-indigo-600"></i> 事件規則類型
+                        </label>
                         <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
-                            <option value="recurring">常規循環 (每個月)</option>
-                            <option value="single">單一事件 (指定日期)</option>
+                            <option value="recurring">🔄 常規循環事件 (持續12個月全年生效)</option>
+                            <option value="single">📌 單一指定事件 (特定日期一次)</option>
                         </select>
                         
                         <div id="recurring-settings-wrapper" class="mt-2 space-y-2">
                             <select id="recurring-rule" onchange="onRecurringRuleChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                                 <option value="lunar_1">【農曆】每月初一 (爐主拜拜)</option>
                                 <option value="lunar_15">【農曆】每月十五 (爐主拜拜)</option>
-                                <option value="lunar_28">【農曆】初一前3天 / 廿八 (木瓜出貨)</option>
-                                <option value="lunar_12">【農曆】十五前3天 / 十二 (木瓜出貨)</option>
+                                <option value="lunar_before_1_3days">【農曆】初一前3天 (自動大小月精算 - 木瓜出貨)</option>
+                                <option value="lunar_before_15_3days">【農曆】十五前3天 (農曆十二 - 木瓜出貨)</option>
                                 <option value="custom_lunar_day">【農曆】自訂每個月固定幾號 (1-30)</option>
                                 <option value="custom_solar_day">【國曆】自訂每個月固定幾號 (1-31)</option>
                                 <option value="monthly_last_fri">【國曆】每月最後一個星期五</option>
@@ -184,13 +186,13 @@
 
                             <!-- Custom Lunar Day Selector (1-30) -->
                             <div id="custom-lunar-day-box" class="hidden pt-1">
-                                <label class="block text-[11px] font-bold text-slate-600 mb-1">選擇【農曆】固定日期 (每個月)</label>
+                                <label class="block text-[11px] font-bold text-slate-600 mb-1">選擇【農曆】固定日期 (每個月 1 ~ 30 日)</label>
                                 <select id="custom-lunar-day-val" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
                                     <option value="1">農曆初一</option><option value="2">農曆初二</option><option value="3">農曆初三</option><option value="4">農曆初四</option><option value="5">農曆初五</option><option value="6">農曆初六</option><option value="7">農曆初七</option><option value="8">農曆初八</option><option value="9">農曆初九</option><option value="10">農曆初十</option><option value="11">農曆十一</option><option value="12">農曆十二</option><option value="13">農曆十三</option><option value="14">農曆十四</option><option value="15">農曆十五</option><option value="16">農曆十六</option><option value="17">農曆十七</option><option value="18">農曆十八</option><option value="19">農曆十九</option><option value="20">農曆二十</option><option value="21">農曆廿一</option><option value="22">農曆廿二</option><option value="23">農曆廿三</option><option value="24">農曆廿四</option><option value="25">農曆廿五</option><option value="26">農曆廿六</option><option value="27">農曆廿七</option><option value="28">農曆廿八</option><option value="29">農曆廿九</option><option value="30">農曆三十</option>
                                 </select>
                             </div>
 
-                            <!-- Custom Solar Day Selector (1-31, All days selectable) -->
+                            <!-- Custom Solar Day Selector (1-31) -->
                             <div id="custom-solar-day-box" class="hidden pt-1">
                                 <label class="block text-[11px] font-bold text-slate-600 mb-1">選擇【國曆】固定日期 (每個月 1 ~ 31 號)</label>
                                 <select id="custom-solar-day-val" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
@@ -199,16 +201,18 @@
                             </div>
 
                             <div class="p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-xl text-[11px] text-indigo-800 leading-relaxed space-y-0.5">
-                                <p class="font-bold flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> 農家行事曆規則說明：</p>
-                                <p>• 完整支援<b>【農曆】</b>與<b>【國曆】</b>每個月循環設定。</p>
-                                <p>• 國曆日期開放 <b>1 至 31 號</b>全數可點選，並可搭配「提前天數」精準掌握行程！</p>
+                                <p class="font-bold flex items-center gap-1"><i class="fa-solid fa-circle-info"></i> 🔄 常規循環說明：</p>
+                                <p>• <b>有效期限</b>：常規事件自動持續循環全年生效（12個月），無需重複設定。</p>
+                                <p>• 支援<b>【農曆】</b>與<b>【國曆】</b>每個月定期提醒。</p>
                             </div>
                         </div>
                     </div>
 
                     <div id="single-date-wrapper" class="hidden">
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-slate-700 font-bold">指定日期類型</label>
+                            <label class="text-slate-700 font-bold flex items-center gap-1.5">
+                                <i class="fa-solid fa-calendar-day text-indigo-600"></i> 指定單一日期
+                            </label>
                             <div class="space-x-2">
                                 <label class="cursor-pointer text-indigo-600 font-bold"><input type="radio" name="calendar-type" value="solar" checked onchange="toggleCalendarType()"> 國曆</label>
                                 <label class="cursor-pointer text-indigo-600 font-bold"><input type="radio" name="calendar-type" value="lunar" onchange="toggleCalendarType()"> 農曆</label>
@@ -225,6 +229,7 @@
                                 <option value="1">初一</option><option value="2">初二</option><option value="3">初三</option><option value="4">初四</option><option value="5">初五</option><option value="6">初六</option><option value="7">初七</option><option value="8">初八</option><option value="9">初九</option><option value="10">初十</option><option value="11">十一</option><option value="12">十二</option><option value="13">十三</option><option value="14">十四</option><option value="15">十五</option><option value="16">十六</option><option value="17">十七</option><option value="18">十八</option><option value="19">十九</option><option value="20">二十</option><option value="21">廿一</option><option value="22">廿二</option><option value="23">廿三</option><option value="24">廿四</option><option value="25">廿五</option><option value="26">廿六</option><option value="27">廿七</option><option value="28">廿八</option><option value="29">廿九</option><option value="30">三十</option>
                             </select>
                         </div>
+                        <p class="text-[11px] text-slate-500 mt-1.5">📌 <b>單一指定事件說明</b>：僅在指定的該特定日期觸發一次。</p>
                     </div>
                 </div>
 
@@ -266,6 +271,27 @@
         </div>
     </div>
 
+    <!-- Custom Toast Notification -->
+    <div id="toast-box" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-xl text-xs font-bold z-50 hidden flex items-center gap-2 border border-slate-700">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toast-msg">訊息通知</span>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 card-shadow border border-slate-100 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-2xl mx-auto mb-3">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <h4 class="text-base font-black text-slate-900 mb-1">確定要刪除此提醒事件嗎？</h4>
+            <p class="text-xs text-slate-500 mb-5">刪除後將無法復原此事件的設定。</p>
+            <div class="flex gap-2">
+                <button onclick="closeConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">取消</button>
+                <button id="confirm-delete-btn" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-md">確定刪除</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Alarm Ringing Modal -->
     <div id="alarm-ring-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden animate-in fade-in zoom-in duration-200">
         <div class="bg-white rounded-3xl max-w-md w-full p-8 card-shadow border-4 border-indigo-400 text-center relative overflow-hidden">
@@ -288,13 +314,9 @@
         </div>
     </div>
 
-    <!-- Firebase SDK & App Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Pre-configured 12-Month Recurring Events (Worship on Lunar 1st & 15th, Papaya Shipping 3 days prior: Lunar 28th and 12th)
+    <!-- Local App Logic -->
+    <script>
+        // Pre-configured 12-Month Recurring Events (Strictly verified: 3 days prior to Lunar 1st & Lunar 15th)
         const defaultEvents = [
             {
                 id: 'default-worship-1',
@@ -307,7 +329,7 @@
                 reminders: [
                     { hour: '06', minute: '00', label: '農曆初一早上提醒' }
                 ],
-                desc: '【農曆】每月初一，請準備三牲四果拜拜祈福（全年12個月自動循環）。'
+                desc: '【常規循環】農曆每月初一（持續12個月全年生效），請準備三牲四果拜拜祈福。'
             },
             {
                 id: 'default-worship-15',
@@ -320,33 +342,33 @@
                 reminders: [
                     { hour: '06', minute: '00', label: '農曆十五早上提醒' }
                 ],
-                desc: '【農曆】每月十五，請準備澎湃供品拜拜祈福（全年12個月自動循環）。'
+                desc: '【常規循環】農曆每月十五（持續12個月全年生效），請準備澎湃供品拜拜祈福。'
             },
             {
                 id: 'default-papaya-1',
                 title: '🍈 木瓜出貨預備 (農曆初一前3天)',
                 type: 'recurring',
-                recurringRule: 'lunar_28',
+                recurringRule: 'lunar_before_1_3days',
                 advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
                     { hour: '19', minute: '00', label: '農曆初一前3天晚上通知' }
                 ],
-                desc: '【農曆】初一前三天 (農曆廿八)，請準備木瓜出貨與宅配裝箱（全年12個月自動循環）。'
+                desc: '【常規循環】農曆初一前三天（自動依農曆大小月精算，持續12個月全年生效），請準備木瓜出貨與宅配裝箱。'
             },
             {
                 id: 'default-papaya-15',
                 title: '🍈 木瓜出貨預備 (農曆十五前3天)',
                 type: 'recurring',
-                recurringRule: 'lunar_12',
+                recurringRule: 'lunar_before_15_3days',
                 advanceDays: 0,
                 maxCount: 6,
                 triggeredCount: 0,
                 reminders: [
                     { hour: '19', minute: '00', label: '農曆十五前3天晚上通知' }
                 ],
-                desc: '【農曆】十五前三天 (農曆十二)，請準備木瓜出貨與宅配裝箱（全年12個月自動循環）。'
+                desc: '【常規循環】農曆十五前三天 (農曆十二，持續12個月全年生效)，請準備木瓜出貨與宅配裝箱。'
             }
         ];
 
@@ -354,71 +376,61 @@
         let currentCalendarYear = new Date().getFullYear();
         let currentCalendarMonth = new Date().getMonth();
         let lastTriggeredMinuteKey = '';
+        let pendingDeleteId = null;
 
-        let db, auth, appId, userId;
+        function showToast(msg) {
+            const box = document.getElementById('toast-box');
+            document.getElementById('toast-msg').innerText = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3500);
+        }
 
-        window.addEventListener('DOMContentLoaded', async () => {
+        window.closeConfirmModal = function() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            pendingDeleteId = null;
+        };
+
+        document.getElementById('confirm-delete-btn').addEventListener('click', () => {
+            if (!pendingDeleteId) return;
+            const id = pendingDeleteId;
+            closeConfirmModal();
+            events = events.filter(e => e.id !== id);
+            saveToLocalStorage();
+            renderEvents();
+            renderInteractiveCalendar();
+            showToast('已成功刪除提醒事件！');
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
             updateClock();
             setInterval(updateClock, 1000);
             setInterval(checkAlarms, 10000);
 
-            try {
-                appId = typeof __app_id !== 'undefined' ? __app_id : 'mountain-ade-reminder';
-                const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-                    apiKey: "AIzaSyDummyKeyForGitHubPreview",
-                    projectId: "mountain-ade-reminder"
-                };
-
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                userId = auth.currentUser?.uid || 'local-user-' + Math.random().toString(36).substring(2, 9);
-                
-                const userEventsColRef = collection(db, 'artifacts', appId, 'users', userId, 'reminders');
-                
-                onSnapshot(userEventsColRef, (snapshot) => {
-                    const loadedEvents = [];
-                    snapshot.forEach(docSnap => {
-                        loadedEvents.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-
-                    if (loadedEvents.length === 0) {
-                        defaultEvents.forEach(async (ev) => {
-                            await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', ev.id), ev);
-                        });
-                        events = defaultEvents;
-                    } else {
-                        events = loadedEvents;
-                    }
-
-                    renderEvents();
-                    renderInteractiveCalendar();
-                    document.getElementById('sync-status').classList.remove('hidden');
-                }, (error) => {
-                    console.log("Firestore offline mode / fallback:", error);
+            const saved = localStorage.getItem('mountain_ade_events_local_v3');
+            if (saved) {
+                try {
+                    events = JSON.parse(saved);
+                } catch(e) {
                     events = defaultEvents;
-                    renderEvents();
-                    renderInteractiveCalendar();
-                });
-
-            } catch (err) {
-                console.log("Using local state mode:", err);
+                }
+            } else {
                 events = defaultEvents;
-                renderEvents();
-                renderInteractiveCalendar();
+                saveToLocalStorage();
             }
+
+            renderEvents();
+            renderInteractiveCalendar();
 
             if ('Notification' in window && Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
         });
+
+        function saveToLocalStorage() {
+            localStorage.setItem('mountain_ade_events_local_v3', JSON.stringify(events));
+        }
 
         window.openEventModal = openEventModal;
         window.closeEventModal = closeEventModal;
@@ -435,6 +447,7 @@
         window.stopAlarmAndSnooze = stopAlarmAndSnooze;
         window.changeMonth = changeMonth;
         window.goToCurrentMonth = goToCurrentMonth;
+        window.openNewEventOnDate = openNewEventOnDate;
 
         function playChime() {
             try {
@@ -490,14 +503,8 @@
 
         function checkEventMatch(ev, targetDate) {
             try {
-                const solar = Solar.fromDate(targetDate);
-                const lunar = solar.getLunar();
-                const lunarDay = lunar.getDay(); // 1~30
-                const solarDay = targetDate.getDate(); // 1~31
-                const advanceDays = ev.advanceDays || 0;
-
-                let checkDate = new Date(targetDate.getTime());
-                checkDate.setDate(checkDate.getDate() + advanceDays);
+                const advanceDays = parseInt(ev.advanceDays) || 0;
+                let checkDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate() + advanceDays);
                 const checkSolar = Solar.fromDate(checkDate);
                 const checkLunar = checkSolar.getLunar();
                 const checkLunarDay = checkLunar.getDay();
@@ -506,10 +513,22 @@
                 if (ev.type === 'recurring') {
                     if (ev.recurringRule === 'lunar_1' && checkLunarDay === 1) return true;
                     if (ev.recurringRule === 'lunar_15' && checkLunarDay === 15) return true;
-                    if (ev.recurringRule === 'lunar_28' && checkLunarDay === 28) return true; // Lunar 1st minus 3 days = Lunar 28
-                    if (ev.recurringRule === 'lunar_12' && checkLunarDay === 12) return true; // Lunar 15th minus 3 days = Lunar 12
+                    
+                    if (ev.recurringRule === 'lunar_before_1_3days') {
+                        let plus3Date = new Date(checkDate.getFullYear(), checkDate.getMonth(), checkDate.getDate() + 3);
+                        let plus3LunarDay = Solar.fromDate(plus3Date).getLunar().getDay();
+                        if (plus3LunarDay === 1) return true;
+                    }
+
+                    if (ev.recurringRule === 'lunar_before_15_3days') {
+                        let plus3Date = new Date(checkDate.getFullYear(), checkDate.getMonth(), checkDate.getDate() + 3);
+                        let plus3LunarDay = Solar.fromDate(plus3Date).getLunar().getDay();
+                        if (plus3LunarDay === 15) return true;
+                    }
+
                     if (ev.recurringRule === 'custom_lunar_day' && checkLunarDay === parseInt(ev.customLunarDay || 1)) return true;
                     if (ev.recurringRule === 'custom_solar_day' && checkSolarDay === parseInt(ev.customSolarDay || 1)) return true;
+                    
                     if (ev.recurringRule === 'monthly_last_fri') {
                         const y = checkDate.getFullYear();
                         const m = checkDate.getMonth();
@@ -519,11 +538,11 @@
                         if (checkDate.getDate() === lastFri) return true;
                     }
                 } else if (ev.type === 'single') {
-                    const solarStr = `${targetDate.getFullYear()}-${String(targetDate.getMonth()+1).padStart(2,'0')}-${String(targetDate.getDate()).padStart(2,'0')}`;
+                    const solarStr = `${ checkDate.getFullYear() }-${ String(checkDate.getMonth()+1).padStart(2,'0') }-${ String(checkDate.getDate()).padStart(2,'0') }`;
                     if (ev.calendarType === 'solar') {
                         if (ev.solarDate === solarStr) return true;
                     } else {
-                        if (lunar.getMonth() == ev.lunarMonth && lunarDay == ev.lunarDay) return true;
+                        if (parseInt(checkLunar.getMonth()) === parseInt(ev.lunarMonth) && parseInt(checkLunarDay) === parseInt(ev.lunarDay)) return true;
                     }
                 }
             } catch(e) {}
@@ -552,10 +571,7 @@
                         if (checkEventMatch(ev, now)) {
                             lastTriggeredMinuteKey = currentHMKey;
                             ev.triggeredCount = (ev.triggeredCount || 0) + 1;
-                            
-                            if (db && auth && userId) {
-                                setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', ev.id), ev, { merge: true }).catch(err => console.log(err));
-                            }
+                            saveToLocalStorage();
 
                             renderEvents();
                             renderInteractiveCalendar();
@@ -596,7 +612,7 @@
 
         function stopAlarmAndSnooze() {
             dismissAlarm();
-            alert('已設定 5 分鐘後重新提醒！');
+            showToast('已設定 5 分鐘後重新提醒！');
         }
 
         function renderEvents() {
@@ -614,15 +630,37 @@
             }
 
             events.forEach(ev => {
-                let typeStr = ev.type === 'recurring' ? '常規循環 (每個月)' : '單一事件';
-                if (ev.advanceDays > 0) typeStr += ` (提前 ${ev.advanceDays} 天)`;
+                let ruleLabel = '單一事件';
+                let typeBadge = '';
+                
+                if (ev.type === 'recurring') {
+                    const ruleMap = {
+                        'lunar_1': '【農曆】每月初一 (持續12個月全年生效)',
+                        'lunar_15': '【農曆】每月十五 (持續12個月全年生效)',
+                        'lunar_before_1_3days': '【農曆】初一前3天 (持續12個月全年生效)',
+                        'lunar_before_15_3days': '【農曆】十五前3天 (持續12個月全年生效)',
+                        'custom_lunar_day': `【農曆】每月 ${ev.customLunarDay || 1} 號 (持續12個月全年生效)`,
+                        'custom_solar_day': `【國曆】每月 ${ev.customSolarDay || 1} 號 (持續12個月全年生效)`,
+                        'monthly_last_fri': '【國曆】每月最後一個週五 (持續12個月全年生效)'
+                    };
+                    ruleLabel = ruleMap[ev.recurringRule] || '常規循環 (持續12個月全年生效)';
+                    typeBadge = `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-rotate mr-1"></i> 🔄 ${ruleLabel}</span>`;
+                } else {
+                    if (ev.calendarType === 'lunar') {
+                        ruleLabel = `【農曆】指定 ${ev.lunarMonth}月${ev.lunarDay}日 (單一事件)`;
+                    } else {
+                        ruleLabel = `【國曆】指定 ${ev.solarDate || '未定'} (單一事件)`;
+                    }
+                    typeBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 📌 ${ruleLabel}</span>`;
+                }
 
-                const typeBadge = `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-rotate mr-1"></i> ${typeStr}</span>`;
-                const countBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 已通知: ${ev.triggeredCount || 0} / ${ev.maxCount || 6} 次</span>`;
+                if (ev.advanceDays > 0) typeBadge += ` <span class="bg-sky-100 text-sky-800 text-xs font-bold px-2 py-0.5 rounded-full">提前 ${ev.advanceDays} 天</span>`;
+
+                const countBadge = `<span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 通知: ${ev.triggeredCount || 0}/${ev.maxCount || 6}次</span>`;
 
                 const remindersHtml = (ev.reminders || []).map(r => `
-                    <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold">
-                        <i class="fa-solid fa-clock text-indigo-600"></i> ${r.hour}:${r.minute} - ${r.label}
+                    <span onclick="editEvent('${ev.id}')" class="cursor-pointer hover:bg-indigo-100 hover:text-indigo-800 transition inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold" title="點擊修改提醒時間">
+                        <i class="fa-solid fa-clock text-indigo-600"></i> ${r.hour}:${r.minute} - ${r.label} <i class="fa-solid fa-pen text-[9px] opacity-60 ml-0.5"></i>
                     </span>
                 `).join('');
 
@@ -653,7 +691,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button onclick="editEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="修改事件">
+                        <button onclick="editEvent('${ev.id}')" class="px-3.5 h-9 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition flex items-center justify-center gap-1.5 text-xs font-bold shadow-xs" title="修改事件與提醒時間">
                             <i class="fa-solid fa-pen"></i> 修改
                         </button>
                     </div>
@@ -684,6 +722,7 @@
         function renderInteractiveCalendar() {
             const titleEl = document.getElementById('calendar-month-title');
             const gridEl = document.getElementById('calendar-grid');
+            if (!titleEl || !gridEl) return;
             titleEl.innerText = `${currentCalendarYear}年 ${currentCalendarMonth + 1}月`;
             gridEl.innerHTML = '';
 
@@ -728,15 +767,21 @@
                 });
 
                 const cell = document.createElement('div');
-                cell.className = `bg-white rounded-xl p-1.5 min-h-[90px] border transition flex flex-col justify-between ${isToday ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-100 hover:border-slate-200'}`;
+                cell.className = `bg-white rounded-xl p-1.5 min-h-[95px] border transition flex flex-col justify-between ${isToday ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-100 hover:border-indigo-200'}`;
                 
                 let eventsHtml = '';
                 matched.forEach(ev => {
-                    const shortTitle = ev.title.length > 7 ? ev.title.slice(0, 7) + '..' : ev.title;
+                    const firstTime = (ev.reminders && ev.reminders.length > 0) ? `${ev.reminders[0].hour}:${ev.reminders[0].minute}` : '';
+                    const shortTitle = ev.title.length > 6 ? ev.title.slice(0, 6) + '..' : ev.title;
+                    const badgeBg = ev.type === 'recurring' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-amber-50 text-amber-700 border-amber-100';
+                    
                     eventsHtml += `
-                        <div onclick="editEvent('${ev.id}')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md truncate mt-0.5 cursor-pointer transition flex items-center justify-between" title="點擊直接修改: ${ev.title}">
-                            <span>${shortTitle}</span>
-                            <i class="fa-solid fa-pen text-[9px] opacity-60"></i>
+                        <div onclick="event.stopPropagation(); editEvent('${ev.id}')" class="${badgeBg} hover:opacity-80 text-[10px] font-bold px-1.5 py-1 rounded-lg mt-0.5 cursor-pointer transition flex flex-col gap-0.5 border shadow-2xs" title="點擊修改「${ev.title}」的時間與內容">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="truncate">${shortTitle}</span>
+                                <i class="fa-solid fa-pen text-[8px] opacity-60 shrink-0"></i>
+                            </div>
+                            ${firstTime ? `<div class="text-[9px] opacity-80 font-extrabold flex items-center gap-0.5"><i class="fa-regular fa-clock text-[8px]"></i> ${firstTime}</div>` : ''}
                         </div>
                     `;
                 });
@@ -746,11 +791,11 @@
                     : (isWeekend ? 'text-rose-500 font-black' : 'text-slate-800 font-black');
 
                 cell.innerHTML = `
-                    <div class="flex justify-between items-center">
+                    <div onclick="openNewEventOnDate('${solarStr}')" class="flex justify-between items-center cursor-pointer hover:bg-slate-50 rounded-lg px-1 py-0.5 transition" title="點擊新增 ${solarStr} (${lunarMonthName}${lunarDayName}) 的提醒事件">
                         <span class="text-xs ${dayNumClass}">${d}</span>
                         <span class="text-[9px] text-slate-400 font-medium">${lunarMonthName}${lunarDayName}</span>
                     </div>
-                    <div class="space-y-0.5 overflow-y-auto max-h-[55px]">
+                    <div class="space-y-1 overflow-y-auto max-h-[65px] pt-0.5">
                         ${eventsHtml}
                     </div>
                 `;
@@ -797,7 +842,7 @@
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-            alert(`已下載「${ev.title}」的行事曆檔案 (.ics)！點兩下即可加入手機內建行事曆。`);
+            showToast(`已下載「${ev.title}」的行事曆檔案 (.ics)！`);
         }
 
         function openEventModal(eventId = null) {
@@ -806,12 +851,12 @@
             container.innerHTML = '';
 
             if (eventId) {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600"></i> 修改提醒事件';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600"></i> 修改提醒事件與時間';
                 const ev = events.find(e => e.id === eventId);
                 if (ev) {
                     document.getElementById('event-id').value = ev.id;
                     document.getElementById('event-title').value = ev.title;
-                    document.getElementById('event-type').value = ev.type;
+                    document.getElementById('event-type').value = ev.type || 'recurring';
                     document.getElementById('recurring-rule').value = ev.recurringRule || 'lunar_1';
                     document.getElementById('custom-lunar-day-val').value = ev.customLunarDay || 1;
                     document.getElementById('custom-solar-day-val').value = ev.customSolarDay || 1;
@@ -845,6 +890,15 @@
                 toggleCalendarType();
                 addReminderRow('19', '00', '提醒通知');
             }
+        }
+
+        function openNewEventOnDate(solarDateStr) {
+            openEventModal(null);
+            document.getElementById('event-type').value = 'single';
+            document.querySelector('input[name="calendar-type"][value="solar"]').checked = true;
+            document.getElementById('event-solar-date').value = solarDateStr;
+            onEventTypeChanged();
+            toggleCalendarType();
         }
 
         function closeEventModal() {
@@ -919,7 +973,7 @@
             container.appendChild(div);
         }
 
-        async function saveEvent(e) {
+        function saveEvent(e) {
             e.preventDefault();
             const id = document.getElementById('event-id').value || 'evt-' + Date.now();
             const title = document.getElementById('event-title').value;
@@ -949,45 +1003,28 @@
                 id, title, type, recurringRule, customLunarDay, customSolarDay, advanceDays, maxCount, triggeredCount: 0, reminders, desc, calendarType, solarDate, lunarMonth, lunarDay
             };
 
-            if (db && auth && userId) {
-                try {
-                    await setDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', id), eventData);
-                } catch(err) {
-                    console.log("Firestore save error:", err);
-                }
+            const index = events.findIndex(ev => ev.id === id);
+            if (index !== -1) {
+                events[index] = eventData;
             } else {
-                const index = events.findIndex(ev => ev.id === id);
-                if (index !== -1) {
-                    events[index] = eventData;
-                } else {
-                    events.push(eventData);
-                }
-                renderEvents();
-                renderInteractiveCalendar();
+                events.push(eventData);
             }
+            saveToLocalStorage();
+            renderEvents();
+            renderInteractiveCalendar();
 
             closeEventModal();
-            alert('提醒事件已成功儲存並同步到您的私人雲端！');
+            showToast('提醒事件已成功儲存並同步至行事曆！');
         }
 
         function editEvent(id) {
             openEventModal(id);
         }
 
-        async function deleteEvent(id) {
-            if (confirm('確定要刪除此提醒事件嗎？')) {
-                if (db && auth && userId) {
-                    try {
-                        await deleteDoc(doc(db, 'artifacts', appId, 'users', userId, 'reminders', id));
-                    } catch(err) {
-                        console.log("Firestore delete error:", err);
-                    }
-                } else {
-                    events = events.filter(e => e.id !== id);
-                    renderEvents();
-                    renderInteractiveCalendar();
-                }
-            }
+        function deleteEvent(id) {
+            pendingDeleteId = id;
+            document.getElementById('confirm-modal').classList.add('hidden');
+            document.getElementById('confirm-modal').classList.remove('hidden');
         }
     </script>
 </body>
