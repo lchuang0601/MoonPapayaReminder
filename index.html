@@ -93,7 +93,7 @@
             <!-- Dynamic events rendered here -->
         </div>
 
-        <!-- Google Calendar Style Interactive Monthly Grid -->
+        <!-- Interactive Monthly Grid (Monday Start) -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 card-shadow border border-slate-100 mt-8">
             <div class="flex flex-col sm:flex-row items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-3">
                 <h3 class="text-base sm:text-lg font-black text-slate-900 flex items-center gap-2">
@@ -113,7 +113,7 @@
                 </div>
             </div>
 
-            <!-- Weekday Headers (Monday to Sunday) with Red Weekend -->
+            <!-- Weekday Headers (Monday to Sunday, Sat/Sun Red) -->
             <div class="grid grid-cols-7 gap-1 text-center text-xs font-bold text-slate-500 mb-2">
                 <div>一</div>
                 <div>二</div>
@@ -243,11 +243,11 @@
     </div>
 
     <script>
-        // --- State Management with pre-configured events (Separate Lunar 1st & 15th, and Papaya 3 days prior) ---
+        // --- Pre-configured State: 4 Independent Events (Lunar 1st, 15th, and Papaya 3 days prior) ---
         let events = [
             {
                 id: '1',
-                title: '🏮 爐主拜拜 (農曆初一)',
+                title: '🏮 農曆初一拜拜',
                 type: 'recurring',
                 solarDate: '',
                 calendarType: 'solar',
@@ -262,7 +262,7 @@
             },
             {
                 id: '2',
-                title: '🏮 爐主拜拜 (農曆十五)',
+                title: '🏮 農曆十五拜拜',
                 type: 'recurring',
                 solarDate: '',
                 calendarType: 'solar',
@@ -307,64 +307,52 @@
             }
         ];
 
+        let currentCalendarYear = new Date().getFullYear();
+        let currentCalendarMonth = new Date().getMonth();
         let lastTriggeredMinuteKey = '';
-        let currentCalendarYear = 2026;
-        let currentCalendarMonth = 9; // 0-indexed (9 = October)
 
-        // --- Initialization ---
         window.onload = function() {
             updateClock();
             setInterval(updateClock, 1000);
-            setInterval(checkAlarms, 1000);
+            setInterval(checkAlarms, 10000);
             renderEvents();
             renderInteractiveCalendar();
-            requestNotificationPermission();
-        };
 
-        function requestNotificationPermission() {
+            // Request Notification Permission
             if ('Notification' in window && Notification.permission !== 'granted') {
                 Notification.requestPermission();
             }
-        }
+        };
 
-        // --- Audio Chime & Speech Synthesis ---
+        // --- Audio & Voice Synthesis ---
         function playChime() {
             try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContext) return;
-                const ctx = new AudioContext();
-                const now = ctx.currentTime;
-                
-                [523.25, 659.25, 783.99].forEach((freq, i) => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + (i * 0.12));
-                    gain.gain.setValueAtTime(0.15, now + (i * 0.12));
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.12) + 0.4);
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start(now + (i * 0.12));
-                    osc.stop(now + (i * 0.12) + 0.4);
-                });
-            } catch (e) {
-                console.log("AudioContext restricted", e);
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.2); // A5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.8);
+            } catch(e) {
+                console.log('Audio context not allowed yet');
             }
         }
 
         function speakVoice(text) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-TW';
-            utterance.rate = 0.95;
-            utterance.pitch = 1.02;
-
-            const voices = window.speechSynthesis.getVoices();
-            const twVoice = voices.find(v => v.lang === 'zh-TW' || v.lang.includes('TW') || v.name.includes('Taiwan') || v.name.includes('Hanhan'));
-            if (twVoice) utterance.voice = twVoice;
-
-            window.speechSynthesis.speak(utterance);
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-TW';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
         // --- Accurate Lunar Calendar Calculation (Verified: 2026-10-27 is 丙午年九月十八日) ---
