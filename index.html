@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>初一十五拜拜與木瓜出貨提醒管家 - MoonPapaya Reminder</title>
+    <title>LunaPapaya Reminder - 智慧提醒管家</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -16,15 +16,15 @@
         body {
             font-family: 'Noto Sans TC', 'Inter', sans-serif;
         }
-        .temple-gradient {
-            background: linear-gradient(135deg, #d32f2f 0%, #ff6f00 100%);
+        .app-gradient {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
         }
         .card-shadow {
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
         @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-4px); }
         }
         .animate-bounce-slow {
             animation: bounce-slow 3s ease-in-out infinite;
@@ -39,114 +39,67 @@
         }
     </style>
 </head>
-<body class="bg-amber-50/60 min-h-screen text-slate-800 flex flex-col justify-between">
+<body class="bg-slate-50 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Top Header (Clean Minimalist) -->
-    <header class="temple-gradient text-white shadow-lg sticky top-0 z-50">
+    <!-- Top Header -->
+    <header class="app-gradient text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-sm border border-white/30 text-2xl animate-bounce-slow">
-                    🏮
+                    🔔
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow">MoonPapaya Reminder</h1>
-                        <span class="bg-white/25 text-amber-100 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">✨ 智能生活防忘管家</span>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow">LunaPapaya Reminder</h1>
+                        <span class="bg-white/25 text-indigo-50 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">✨ 24小時制智慧提醒</span>
                     </div>
-                    <p class="text-xs sm:text-sm text-amber-100 font-medium">爸爸拜拜 • 弟妹木瓜出貨 • 國曆農曆自訂事件鬧鈴</p>
+                    <p class="text-xs sm:text-sm text-indigo-100 font-medium">自訂事件主題 • 國曆農曆循環 • 次數限制控制 • 語音播報</p>
                 </div>
             </div>
-            
             <div class="flex items-center gap-2">
-                <button onclick="openShortcutModal()" class="bg-white/15 hover:bg-white/25 border border-white/30 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-download"></i> 桌面捷徑 Icon
-                </button>
+                <div class="bg-white/10 px-4 py-2 rounded-2xl border border-white/20 text-right">
+                    <div id="current-date-str" class="text-xs font-bold text-indigo-100">載入日期中...</div>
+                    <div id="current-time-str" class="text-lg font-black tracking-wider text-white">00:00:00</div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
         
-        <!-- Left Column: Clock & Today Info (1 col) -->
-        <div class="space-y-6">
-            <!-- Today's Info Card -->
-            <div class="bg-white rounded-3xl p-6 card-shadow border border-amber-100 relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 text-8xl opacity-15 select-none">⏰</div>
-                <div class="flex items-center justify-between mb-4">
-                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">即時農曆日期</span>
-                    <span id="current-time-str" class="text-xs text-slate-400 font-semibold"></span>
-                </div>
-                <div class="mb-4">
-                    <h2 id="today-solar" class="text-2xl font-black text-slate-900 mb-1">載入中...</h2>
-                    <p id="today-lunar" class="text-base font-bold text-amber-700 flex items-center gap-1.5">
-                        <i class="fa-solid fa-moon"></i> 農曆計算中...
-                    </p>
-                </div>
-                <div class="bg-amber-50/80 rounded-2xl p-4 border border-amber-200/60 text-xs text-slate-600 leading-relaxed">
-                    <p class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-circle-info text-amber-600"></i> 貼心提醒功能：</p>
-                    時間到將自動彈出鬧鈴並語音播放提醒內容，確保絕不錯過任何拜拜與出貨！
-                </div>
+        <!-- Controls & Add Button Bar -->
+        <div class="bg-white rounded-3xl p-6 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="text-lg font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i> 事件提醒清單
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">自訂任何生活大小事、拜拜或出貨排程，時間到自動語音播報與彈出鬧鈴！</p>
             </div>
+            <button onclick="openEventModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> 新增自訂提醒事件
+            </button>
         </div>
 
-        <!-- Right Column: Events Manager & Timeline (2 cols) -->
-        <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Event Management Card -->
-            <div class="bg-white rounded-3xl p-6 card-shadow border border-amber-100">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <div>
-                        <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-days text-amber-600"></i> 事件規則與鬧鈴管理
-                        </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">支援農曆初一十五常規循環，或指定國曆日期時間的單一事件！</p>
-                    </div>
-                    <button onclick="openEventModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4.5 py-2.5 rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> 新增提醒事件
-                    </button>
-                </div>
-
-                <!-- Filter Tabs -->
-                <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
-                    <button onclick="setFilter('all')" id="filter-all" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white transition whitespace-nowrap">全部事件</button>
-                    <button onclick="setFilter('拜拜')" id="filter-拜拜" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">🏮 拜拜相關</button>
-                    <button onclick="setFilter('木瓜')" id="filter-木瓜" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">🍈 木瓜出貨</button>
-                    <button onclick="setFilter('其他')" id="filter-其他" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">📌 單一/其他事件</button>
-                </div>
-
-                <!-- Events List Container -->
-                <div id="events-container" class="space-y-3 max-h-[460px] overflow-y-auto pr-1">
-                    <!-- Dynamic events rendered here -->
-                </div>
-            </div>
-
-            <!-- Upcoming Schedule Timeline -->
-            <div class="bg-white rounded-3xl p-6 card-shadow border border-amber-100">
-                <h3 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-clock-rotate-left text-amber-600"></i> 近期排程預告
-                </h3>
-                <div id="upcoming-schedule" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <!-- Dynamic upcoming schedule -->
-                </div>
-            </div>
-
+        <!-- Events List Container -->
+        <div id="events-container" class="space-y-3">
+            <!-- Dynamic events rendered here -->
         </div>
 
     </main>
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 mt-12 text-center text-xs">
-        <p class="mb-1">MoonPapaya Reminder (初一十五拜拜與木瓜出貨提醒管家) • 智能鬧鈴與語音播報系統</p>
-        <p>© 2026 All rights reserved. 祝爸爸拜拜順心、弟妹木瓜大賣！</p>
+        <p class="mb-1">LunaPapaya Reminder • 智慧鬧鈴與農曆國曆管家系統</p>
+        <p>© 2026 All rights reserved. 輕鬆管理大小事，永不遺忘重要時刻！</p>
     </footer>
 
     <!-- Modal: Add/Edit Event -->
     <div id="event-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-100 max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-100 max-h-[95vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-title" class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-plus text-amber-600"></i> 新增提醒事件
+                <h3 id="modal-title" class="text-base font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-plus text-indigo-600"></i> 新增提醒事件
                 </h3>
                 <button onclick="closeEventModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center bg-slate-100">
                     <i class="fa-solid fa-xmark"></i>
@@ -157,106 +110,79 @@
                 <input type="hidden" id="event-id">
                 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">事件名稱</label>
-                    <input type="text" id="event-title" required placeholder="例如：拜訪姑丈 / 爸爸初一拜拜" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
+                    <label class="block text-slate-700 font-bold mb-1">事件主題名稱 (完全自訂)</label>
+                    <input type="text" id="event-title" required placeholder="例如：爐主初一拜拜 / 木瓜出貨 / 拜訪姑丈" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-slate-700 font-bold mb-1">分類</label>
-                        <select id="event-category" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
-                            <option value="拜拜">🏮 拜拜相關</option>
-                            <option value="木瓜">🍈 木瓜出貨</option>
-                            <option value="其他">📌 單一/其他事件</option>
+                        <label class="block text-slate-700 font-bold mb-1">事件類型規則</label>
+                        <select id="event-type" onchange="onEventTypeChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                            <option value="lunar_recurring">農曆常規循環 (如：初一、十五)</option>
+                            <option value="gregorian_single">國曆特定單一日期 (如：指定年月日)</option>
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-slate-700 font-bold mb-1">循環規則</label>
-                        <select id="event-cycle" onchange="onCycleChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
-                            <option value="lunar_1_15">農曆初一 / 十五 (常規循環)</option>
-                            <option value="solar_single">國曆特定單一日期 (如：拜訪姑丈)</option>
+                    <div id="lunar-rule-wrapper">
+                        <label class="block text-slate-700 font-bold mb-1">農曆循環設定</label>
+                        <select id="lunar-rule-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
+                            <option value="1_and_15">農曆初一與十五 (當天)</option>
+                            <option value="minus_3_days">農曆初一與十五的前 3 天 (出貨排程)</option>
+                            <option value="minus_1_day">農曆初一與十五的前 1 天 (前一晚預備)</option>
                         </select>
+                    </div>
+                    <div id="solar-date-wrapper" class="hidden">
+                        <label class="block text-slate-700 font-bold mb-1">指定國曆日期</label>
+                        <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold">
                     </div>
                 </div>
 
-                <!-- Solar Date Input -->
-                <div id="solar-date-wrapper" class="hidden">
-                    <label class="block text-slate-700 font-bold mb-1">指定國曆日期</label>
-                    <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1">最大通知次數限制 (避免無限提醒)</label>
+                    <input type="number" id="event-max-count" min="1" max="99" value="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-indigo-500 font-semibold" placeholder="例如：3次">
                 </div>
 
                 <div>
                     <div class="flex justify-between items-center mb-1">
-                        <label class="font-bold text-slate-700">彈性鬧鈴時間與次數設定 (可自由增加多組)</label>
-                        <button type="button" onclick="addReminderRow()" class="text-amber-600 hover:text-amber-700 font-bold flex items-center gap-1">
-                            <i class="fa-solid fa-plus-circle"></i> 增加鬧鈴時間
+                        <label class="font-bold text-slate-700">24 小時制提醒時間與次數 (00-23 時)</label>
+                        <button type="button" onclick="addReminderRow()" class="text-indigo-600 hover:text-indigo-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-plus-circle"></i> 增加時間
                         </button>
                     </div>
-                    <div id="reminder-rules-container" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                    <div id="reminder-rules-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
                         <!-- Dynamic reminder rows -->
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-slate-700 font-bold mb-1">詳細備註與語音播報內容</label>
-                    <textarea id="event-desc" rows="2" placeholder="輸入鬧鈴響起時要唸出或顯示的提醒內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-amber-500"></textarea>
+                    <label class="block text-slate-700 font-bold mb-1">語音播報與詳細備註內容</label>
+                    <textarea id="event-desc" rows="2" placeholder="當鬧鈴響起時，語音將會唸出或顯示此詳細內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
 
                 <div class="pt-2 flex justify-end gap-2">
                     <button type="button" onclick="closeEventModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl transition">取消</button>
-                    <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition">儲存事件規則</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition">儲存事件</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal: Shortcut Icon Generator -->
-    <div id="shortcut-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 card-shadow border border-slate-100 text-center">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> 桌面捷徑 Icon 設計
-                </h3>
-                <button onclick="closeShortcutModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center bg-slate-100">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <p class="text-xs text-slate-500 mb-5">結合燈籠拜拜與新鮮木瓜的可愛捷徑圖示：</p>
-            
-            <div class="flex justify-center mb-5">
-                <div class="relative p-3 bg-amber-50 rounded-3xl border-2 border-dashed border-amber-300 shadow-inner inline-block">
-                    <canvas id="shortcut-canvas" width="180" height="180" class="rounded-2xl shadow-md bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 block"></canvas>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-2.5">
-                <button onclick="downloadIcon()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-download"></i> 下載捷徑圖示 (.png)
-                </button>
-                <button onclick="closeShortcutModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition">
-                    關閉
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Alarm Ringing Fullscreen / Toast Alert Modal -->
+    <!-- Alarm Ringing Modal -->
     <div id="alarm-ring-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden animate-in fade-in zoom-in duration-200">
-        <div class="bg-white rounded-3xl max-w-md w-full p-8 card-shadow border-4 border-amber-400 text-center relative overflow-hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 card-shadow border-4 border-indigo-400 text-center relative overflow-hidden">
             <div class="absolute -top-10 -right-10 text-9xl opacity-10 select-none">🔔</div>
-            <div class="w-20 h-20 rounded-3xl bg-rose-100 text-rose-600 flex items-center justify-center text-4xl mx-auto mb-4 animate-pulse-ring shadow-md">
-                🏮
+            <div class="w-20 h-20 rounded-3xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-4xl mx-auto mb-4 animate-pulse-ring shadow-md">
+                ⏰
             </div>
-            <span class="bg-rose-100 text-rose-800 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">🚨 鬧鈴時間到！</span>
-            <h3 id="ring-title" class="text-xl font-black text-slate-900 mt-3 mb-2">提醒事件名稱</h3>
-            <p id="ring-message" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mb-6 bg-amber-50 p-4 rounded-2xl border border-amber-200"></p>
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">🚨 提醒時間到！</span>
+            <h3 id="ring-title" class="text-xl font-black text-slate-900 mt-3 mb-2">事件主題名稱</h3>
+            <p id="ring-message" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-200"></p>
             
             <div class="flex gap-3">
                 <button onclick="stopAlarmAndSnooze()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">
                     稍後提醒 (5分鐘)
                 </button>
-                <button onclick="dismissAlarm()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md">
-                    我知道了 (關閉鬧鈴)
+                <button onclick="dismissAlarm()" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md">
+                    我知道了 (關閉)
                 </button>
             </div>
         </div>
@@ -267,75 +193,62 @@
         let events = [
             {
                 id: '1',
-                title: '🏮 爸爸初一拜拜',
-                category: '拜拜',
-                cycle: 'lunar_1_15',
+                title: '🏮 爐主農曆初一十五拜拜',
+                type: 'lunar_recurring',
+                lunarRule: '1_and_15',
                 solarDate: '',
+                maxCount: 3,
+                triggeredCount: 0,
                 reminders: [
-                    { time: '19:00', label: '前一天晚上預備提醒' },
-                    { time: '06:00', label: '當天早上出發提醒' }
+                    { hour: '19', minute: '00', label: '前一晚預備' },
+                    { hour: '06', minute: '00', label: '當天早上提醒' }
                 ],
-                desc: '爸爸爐主注意：請準備三牲四果、金銀財寶，誠心祭拜祈求闔家平安。'
+                desc: '請準備三牲四果、金銀財寶祭拜祈福。'
             },
             {
                 id: '2',
-                title: '🏮 爸爸十五拜拜',
-                category: '拜拜',
-                cycle: 'lunar_1_15',
+                title: '🍈 木瓜出貨預備 (初一十五前3天)',
+                type: 'lunar_recurring',
+                lunarRule: 'minus_3_days',
                 solarDate: '',
+                maxCount: 3,
+                triggeredCount: 0,
                 reminders: [
-                    { time: '19:00', label: '前一天晚上預備提醒' },
-                    { time: '06:00', label: '當天早上出發提醒' }
+                    { hour: '19', minute: '00', label: '提前3天通知' }
                 ],
-                desc: '爸爸爐主注意：農曆十五土地公與祖先拜拜日。'
+                desc: '拜拜前三天，請準備木瓜出貨與宅配裝箱！'
             },
             {
                 id: '3',
-                title: '🍈 木瓜出貨預備 (初一前3天)',
-                category: '木瓜',
-                cycle: 'lunar_1_15_minus3',
-                solarDate: '',
-                reminders: [
-                    { time: '08:00', label: '提前3天出貨通知' }
-                ],
-                desc: '弟妹注意：初一拜拜前夕，準備優質木瓜出貨與宅配裝箱！'
-            },
-            {
-                id: '4',
-                title: '🍈 木瓜出貨預備 (十五前3天)',
-                category: '木瓜',
-                cycle: 'lunar_1_15_minus3',
-                solarDate: '',
-                reminders: [
-                    { time: '08:00', label: '提前3天出貨通知' }
-                ],
-                desc: '弟妹注意：十五拜拜前夕，準備優質木瓜出貨與宅配裝箱！'
-            },
-            {
-                id: '5',
-                title: '📌 國曆拜訪姑丈',
-                category: '其他',
-                cycle: 'solar_single',
+                title: '📌 拜訪姑丈',
+                type: 'gregorian_single',
+                lunarRule: '',
                 solarDate: '2026-06-15',
+                maxCount: 1,
+                triggeredCount: 0,
                 reminders: [
-                    { time: '10:00', label: '出發前提醒' }
+                    { hour: '14', minute: '00', label: '出發前提醒' }
                 ],
-                desc: '記得帶上新鮮水果前往拜訪姑丈。'
+                desc: '記得攜帶新鮮水果前往拜訪姑丈。'
             }
         ];
 
-        let currentFilter = 'all';
-        let lastTriggeredMinute = '';
+        let lastTriggeredMinuteKey = '';
 
         // --- Initialization ---
         window.onload = function() {
-            updateClockAndLunar();
-            setInterval(updateClockAndLunar, 1000);
+            updateClock();
+            setInterval(updateClock, 1000);
             setInterval(checkAlarms, 1000);
             renderEvents();
-            renderUpcomingSchedule();
-            drawShortcutIcon();
+            requestNotificationPermission();
         };
+
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission !== 'granted') {
+                Notification.requestPermission();
+            }
+        }
 
         // --- Audio Chime & Speech Synthesis ---
         function playChime() {
@@ -377,19 +290,16 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // --- Lunar Calendar Simulation ---
-        function getLunarInfo(date) {
+        // --- Lunar Calendar Approximation ---
+        function getLunarDay(date) {
             const day = date.getDate();
             const month = date.getMonth() + 1;
             let lunarDay = (day + 15) % 30;
             if (lunarDay === 0) lunarDay = 30;
-            return {
-                lunarStr: `農曆 ${month}月 ${lunarDay}日`,
-                lunarDayNum: lunarDay
-            };
+            return { month, lunarDay };
         }
 
-        function updateClockAndLunar() {
+        function updateClock() {
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth() + 1;
@@ -398,11 +308,10 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
+            const lunar = getLunarDay(now);
+
+            document.getElementById('current-date-str').innerText = `${year}年${month}月${date}日 (農曆約 ${lunar.month}月${lunar.lunarDay}日)`;
             document.getElementById('current-time-str').innerText = `${hours}:${minutes}:${seconds}`;
-            document.getElementById('today-solar').innerText = `${year}年${month}月${date}日`;
-            
-            const lunar = getLunarInfo(now);
-            document.getElementById('today-lunar').innerHTML = `<i class="fa-solid fa-moon"></i> ${lunar.lunarStr} ${lunar.lunarDayNum === 1 ? ' (🔥 今日初一)' : lunar.lunarDayNum === 15 ? ' (🔥 今日十五)' : ''}`;
         }
 
         // --- Real-time Alarm Checker ---
@@ -413,26 +322,37 @@
             const day = String(now.getDate()).padStart(2, '0');
             const todaySolarStr = `${year}-${month}-${day}`;
             
-            const currentHM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-            const currentHMFull = `${todaySolarStr} ${currentHM}`;
+            const currentHour = String(now.getHours()).padStart(2, '0');
+            const currentMinute = String(now.getMinutes()).padStart(2, '0');
+            const currentHMKey = `${todaySolarStr}-${currentHour}:${currentMinute}`;
 
-            if (currentHMFull === lastTriggeredMinute) return;
+            if (currentHMKey === lastTriggeredMinuteKey) return;
 
-            const lunar = getLunarInfo(now);
-            const isLunar1or15 = (lunar.lunarDayNum === 1 || lunar.lunarDayNum === 15);
-            const isLunarMinus3 = (lunar.lunarDayNum === 27 || lunar.lunarDayNum === 12);
+            const lunar = getLunarDay(now);
+            const isLunar1or15 = (lunar.lunarDay === 1 || lunar.lunarDay === 15);
+            const isLunarMinus3 = (lunar.lunarDay === 27 || lunar.lunarDay === 12); // 3 days before 1st/15th
+            const isLunarMinus1 = (lunar.lunarDay === 29 || lunar.lunarDay === 14); // 1 day before 1st/15th
 
             events.forEach(ev => {
+                // Check if max count exceeded
+                if (ev.maxCount && ev.triggeredCount >= ev.maxCount) return;
+
                 ev.reminders.forEach(r => {
-                    if (r.time === currentHM) {
+                    if (r.hour === currentHour && r.minute === currentMinute) {
                         let shouldTrigger = false;
-                        if (ev.cycle === 'lunar_1_15' && isLunar1or15) shouldTrigger = true;
-                        if (ev.cycle === 'lunar_1_15_minus3' && isLunarMinus3) shouldTrigger = true;
-                        if (ev.cycle === 'solar_single' && ev.solarDate === todaySolarStr) shouldTrigger = true;
+                        if (ev.type === 'lunar_recurring') {
+                            if (ev.lunarRule === '1_and_15' && isLunar1or15) shouldTrigger = true;
+                            if (ev.lunarRule === 'minus_3_days' && isLunarMinus3) shouldTrigger = true;
+                            if (ev.lunarRule === 'minus_1_day' && isLunarMinus1) shouldTrigger = true;
+                        } else if (ev.type === 'gregorian_single') {
+                            if (ev.solarDate === todaySolarStr) shouldTrigger = true;
+                        }
 
                         if (shouldTrigger) {
-                            lastTriggeredMinute = currentHMFull;
-                            triggerAlarm(ev.title, `${r.label}：${ev.desc}`);
+                            lastTriggeredMinuteKey = currentHMKey;
+                            ev.triggeredCount = (ev.triggeredCount || 0) + 1;
+                            renderEvents();
+                            triggerAlarm(ev.title, `${r.label} (${r.hour}:${r.minute})：${ev.desc}`);
                         }
                     }
                 });
@@ -443,6 +363,10 @@
             playChime();
             speakVoice(`${title}。${message}`);
             
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, { body: message, icon: 'https://placehold.co/128x128/4f46e5/ffffff?text=🔔' });
+            }
+
             document.getElementById('ring-title').innerText = title;
             document.getElementById('ring-message').innerText = message;
             document.getElementById('alarm-ring-modal').classList.remove('hidden');
@@ -473,63 +397,54 @@
             const container = document.getElementById('events-container');
             container.innerHTML = '';
 
-            const filtered = currentFilter === 'all' ? events : events.filter(e => e.category === currentFilter);
-
-            if (filtered.length === 0) {
+            if (events.length === 0) {
                 container.innerHTML = `
-                    <div class="text-center py-10 text-slate-400">
-                        <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
-                        <p class="text-xs">沒有找到相關事件</p>
+                    <div class="bg-white rounded-3xl p-12 text-center text-slate-400 card-shadow border border-slate-100">
+                        <i class="fa-solid fa-folder-open text-4xl mb-3 text-indigo-300"></i>
+                        <p class="text-xs font-medium">目前沒有任何提醒事件，點擊上方按鈕新增！</p>
                     </div>
                 `;
                 return;
             }
 
-            filtered.forEach(ev => {
-                let badgeColor = 'bg-amber-100 text-amber-800';
-                let iconClass = 'fa-thumbtack';
-                if (ev.category === '拜拜') {
-                    badgeColor = 'bg-rose-100 text-rose-800';
-                    iconClass = 'fa-fire-flame-curved';
-                } else if (ev.category === '木瓜') {
-                    badgeColor = 'bg-orange-100 text-orange-800';
-                    iconClass = 'fa-seedling';
-                }
+            events.forEach(ev => {
+                const typeBadge = ev.type === 'lunar_recurring' 
+                    ? `<span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-moon mr-1"></i> 農曆常規循環</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-calendar-day mr-1"></i> 國曆單一日期 (${ev.solarDate})</span>`;
+
+                const countBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-bell mr-1"></i> 已通知: ${ev.triggeredCount || 0} / ${ev.maxCount || '∞'} 次</span>`;
 
                 const remindersHtml = ev.reminders.map(r => `
                     <span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold">
-                        <i class="fa-solid fa-clock text-amber-600"></i> ${r.time} (${r.label})
+                        <i class="fa-solid fa-clock text-indigo-600"></i> ${r.hour}:${r.minute} - ${r.label}
                     </span>
                 `).join('');
 
-                const cycleText = ev.cycle === 'lunar_1_15' ? '農曆初一十五循環' : ev.cycle === 'lunar_1_15_minus3' ? '農曆初一十五前3天' : `國曆指定日 (${ev.solarDate})`;
-
                 const card = document.createElement('div');
-                card.className = "bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-2xl p-4 transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3";
+                card.className = "bg-white rounded-3xl p-5 card-shadow border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition hover:border-indigo-200";
                 card.innerHTML = `
-                    <div class="space-y-1.5">
+                    <div class="space-y-2 flex-grow">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${badgeColor}">
-                                <i class="fa-solid ${iconClass} mr-1"></i> ${ev.category}
-                            </span>
-                            <h4 class="font-bold text-slate-900 text-sm">${ev.title}</h4>
-                            <span class="text-[11px] text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded-md font-medium">
-                                ${cycleText}
-                            </span>
+                            <h4 class="font-black text-slate-900 text-base">${ev.title}</h4>
+                            ${typeBadge}
+                            ${countBadge}
                         </div>
-                        <p class="text-xs text-slate-600">${ev.desc || '無備註'}</p>
+                        <p class="text-xs text-slate-600">${ev.desc || '無詳細備註'}</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             ${remindersHtml}
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button onclick="simulateAlarmTrigger('${ev.title}', '${ev.desc}')" class="w-8 h-8 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 hover:bg-amber-200 transition flex items-center justify-center text-xs shadow-xs" title="測試鬧鈴">
+                    <div class="flex items-center gap-2 self-end sm:self-center flex-wrap">
+                        <button onclick="exportToICS('${ev.id}')" class="px-3 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100 transition flex items-center gap-1.5 text-xs font-bold shadow-xs" title="下載行事曆檔案(.ics)">
+                            <i class="fa-solid fa-calendar-plus text-indigo-600"></i> 匯入行事曆
+                        </button>
+                        <button onclick="simulateAlarmTrigger('${ev.title}', '${ev.desc}')" class="w-9 h-9 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 transition flex items-center justify-center text-xs shadow-xs" title="立即測試鬧鈴">
                             <i class="fa-solid fa-bell"></i>
                         </button>
-                        <button onclick="editEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="編輯">
+                        <button onclick="editEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="編輯事件">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="deleteEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除">
+                        <button onclick="deleteEvent('${ev.id}')" class="w-9 h-9 rounded-xl bg-slate-50 border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除事件">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
@@ -538,43 +453,42 @@
             });
         }
 
-        function setFilter(category) {
-            currentFilter = category;
-            ['all', '拜拜', '木瓜', '其他'].forEach(cat => {
-                const btn = document.getElementById(`filter-${cat}`);
-                if (cat === category) {
-                    btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white transition whitespace-nowrap";
-                } else {
-                    btn.className = "px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap";
-                }
-            });
-            renderEvents();
-        }
+        // --- ICS Calendar Export ---
+        function exportToICS(id) {
+            const ev = events.find(e => e.id === id);
+            if (!ev) return;
 
-        function renderUpcomingSchedule() {
-            const container = document.getElementById('upcoming-schedule');
-            container.innerHTML = `
-                <div class="bg-amber-50/60 border border-amber-200/60 rounded-2xl p-3.5 flex items-center gap-3">
-                    <div class="bg-amber-600 text-white font-black rounded-xl w-12 h-12 flex flex-col items-center justify-center text-xs flex-shrink-0 shadow-sm">
-                        <span>每日</span>
-                        <span class="text-xs">背景</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">智能鬧鈴背景監控中</h4>
-                        <p class="text-[11px] text-slate-600 mt-0.5">時間到將自動彈出鬧鈴並語音播報提醒。</p>
-                    </div>
-                </div>
-                <div class="bg-orange-50/60 border border-orange-200/60 rounded-2xl p-3.5 flex items-center gap-3">
-                    <div class="bg-orange-600 text-white font-black rounded-xl w-12 h-12 flex flex-col items-center justify-center text-xs flex-shrink-0 shadow-sm">
-                        <span>彈性</span>
-                        <span class="text-xs">次數</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">支援國曆農曆自訂事件</h4>
-                        <p class="text-[11px] text-slate-600 mt-0.5">如拜訪姑丈、開會或拜拜皆可自由新增。</p>
-                    </div>
-                </div>
-            `;
+            let targetDateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            if (ev.type === 'gregorian_single' && ev.solarDate) {
+                targetDateStr = ev.solarDate.replace(/-/g, '');
+            }
+
+            const timeObj = ev.reminders[0] || { hour: '08', minute: '00' };
+            const timeStr = `${timeObj.hour}${timeObj.minute}00`;
+
+            const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//LunaPapaya Reminder//TW',
+                'BEGIN:VEVENT',
+                `SUMMARY:${ev.title}`,
+                `DESCRIPTION:${ev.desc || ''}`,
+                `DTSTART:${targetDateStr}T${timeStr}`,
+                `DTEND:${targetDateStr}T${Number(timeObj.hour)+1}${timeObj.minute}00`,
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${ev.title}.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            alert(`已下載「${ev.title}」的行事曆檔案 (.ics)！點兩下即可加入手機內建行事曆。`);
         }
 
         // --- Modal & Form Handling ---
@@ -584,25 +498,27 @@
             container.innerHTML = '';
 
             if (eventId) {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-600"></i> 編輯提醒事件';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-indigo-600"></i> 編輯提醒事件';
                 const ev = events.find(e => e.id === eventId);
                 if (ev) {
                     document.getElementById('event-id').value = ev.id;
                     document.getElementById('event-title').value = ev.title;
-                    document.getElementById('event-category').value = ev.category;
-                    document.getElementById('event-cycle').value = ev.cycle;
+                    document.getElementById('event-type').value = ev.type;
+                    document.getElementById('lunar-rule-type').value = ev.lunarRule || '1_and_15';
                     document.getElementById('event-solar-date').value = ev.solarDate || '';
+                    document.getElementById('event-max-count').value = ev.maxCount || 3;
                     document.getElementById('event-desc').value = ev.desc || '';
-                    onCycleChanged();
-                    ev.reminders.forEach(r => addReminderRow(r.time, r.label));
+                    onEventTypeChanged();
+                    ev.reminders.forEach(r => addReminderRow(r.hour, r.minute, r.label));
                 }
             } else {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-amber-600"></i> 新增提醒事件';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-indigo-600"></i> 新增提醒事件';
                 document.getElementById('event-form').reset();
                 document.getElementById('event-id').value = '';
-                onCycleChanged();
-                addReminderRow('19:00', '前一天晚上預備提醒');
-                addReminderRow('06:00', '當天早上出發提醒');
+                document.getElementById('event-max-count').value = 3;
+                onEventTypeChanged();
+                addReminderRow('19', '00', '前一晚提醒');
+                addReminderRow('06', '00', '當天早上提醒');
             }
         }
 
@@ -610,23 +526,49 @@
             document.getElementById('event-modal').classList.add('hidden');
         }
 
-        function onCycleChanged() {
-            const cycle = document.getElementById('event-cycle').value;
-            const wrapper = document.getElementById('solar-date-wrapper');
-            if (cycle === 'solar_single') {
-                wrapper.classList.remove('hidden');
+        function onEventTypeChanged() {
+            const type = document.getElementById('event-type').value;
+            const lunarWrapper = document.getElementById('lunar-rule-wrapper');
+            const solarWrapper = document.getElementById('solar-date-wrapper');
+            if (type === 'lunar_recurring') {
+                lunarWrapper.classList.remove('hidden');
+                solarWrapper.classList.add('hidden');
             } else {
-                wrapper.classList.add('hidden');
+                lunarWrapper.classList.add('hidden');
+                solarWrapper.classList.remove('hidden');
             }
         }
 
-        function addReminderRow(timeVal = '08:00', labelVal = '提醒通知') {
+        function addReminderRow(hourVal = '08', minuteVal = '00', labelVal = '提醒通知') {
             const container = document.getElementById('reminder-rules-container');
+            
+            // Generate 24-hour options (00-23)
+            let hoursOptions = '';
+            for (let h = 0; h < 24; h++) {
+                const hs = String(h).padStart(2, '0');
+                hoursOptions += `<option value="${hs}" ${hs === hourVal ? 'selected' : ''}>${hs} 時</option>`;
+            }
+
+            // Generate minutes options (00-59)
+            let minutesOptions = '';
+            for (let m = 0; m < 60; m += 5) {
+                const ms = String(m).padStart(2, '0');
+                minutesOptions += `<option value="${ms}" ${ms === minuteVal ? 'selected' : ''}>${ms} 分</option>`;
+            }
+            if (![0,5,10,15,20,25,30,35,40,45,50,55].includes(parseInt(minuteVal))) {
+                minutesOptions += `<option value="${minuteVal}" selected>${minuteVal} 分</option>`;
+            }
+
             const div = document.createElement('div');
-            div.className = "flex items-center gap-2 reminder-row";
+            div.className = "flex items-center gap-2 reminder-row bg-slate-50 p-2 rounded-2xl border border-slate-200";
             div.innerHTML = `
-                <input type="time" value="${timeVal}" class="reminder-time bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
-                <input type="text" value="${labelVal}" placeholder="提醒標籤 (例: 早上出發)" class="reminder-label flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
+                <select class="reminder-hour bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                    ${hoursOptions}
+                </select>
+                <select class="reminder-minute bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold focus:outline-none focus:border-indigo-500">
+                    ${minutesOptions}
+                </select>
+                <input type="text" value="${labelVal}" placeholder="提醒標籤 (例: 晚上提醒)" class="reminder-label flex-grow bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-indigo-500">
                 <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-rose-600 p-2">
                     <i class="fa-solid fa-trash-can text-xs"></i>
                 </button>
@@ -638,34 +580,39 @@
             e.preventDefault();
             const id = document.getElementById('event-id').value;
             const title = document.getElementById('event-title').value;
-            const category = document.getElementById('event-category').value;
-            const cycle = document.getElementById('event-cycle').value;
+            const type = document.getElementById('event-type').value;
+            const lunarRule = document.getElementById('lunar-rule-type').value;
             const solarDate = document.getElementById('event-solar-date').value;
+            const maxCount = parseInt(document.getElementById('event-max-count').value) || 3;
             const desc = document.getElementById('event-desc').value;
 
             const reminderRows = document.querySelectorAll('.reminder-row');
             let reminders = [];
             reminderRows.forEach(row => {
-                const time = row.querySelector('.reminder-time').value;
+                const hour = row.querySelector('.reminder-hour').value;
+                const minute = row.querySelector('.reminder-minute').value;
                 const label = row.querySelector('.reminder-label').value;
-                if (time) reminders.push({ time, label });
+                if (hour && minute) reminders.push({ hour, minute, label });
             });
 
             if (id) {
                 const index = events.findIndex(ev => ev.id === id);
                 if (index !== -1) {
-                    events[index] = { id, title, category, cycle, solarDate, reminders, desc };
+                    events[index] = { 
+                        ...events[index],
+                        title, type, lunarRule, solarDate, maxCount, reminders, desc 
+                    };
                 }
             } else {
                 events.push({
                     id: Date.now().toString(),
-                    title, category, cycle, solarDate, reminders, desc
+                    title, type, lunarRule, solarDate, maxCount, triggeredCount: 0, reminders, desc
                 });
             }
 
             closeEventModal();
             renderEvents();
-            alert('事件規則與鬧鈴已成功儲存！');
+            alert('提醒事件已成功儲存！');
         }
 
         function editEvent(id) {
@@ -673,41 +620,10 @@
         }
 
         function deleteEvent(id) {
-            if (confirm('確定要刪除此事件嗎？')) {
+            if (confirm('確定要刪除此提醒事件嗎？')) {
                 events = events.filter(e => e.id !== id);
                 renderEvents();
             }
-        }
-
-        // --- Shortcut Modal ---
-        function openShortcutModal() { document.getElementById('shortcut-modal').classList.remove('hidden'); }
-        function closeShortcutModal() { document.getElementById('shortcut-modal').classList.add('hidden'); }
-
-        function drawShortcutIcon() {
-            const canvas = document.getElementById('shortcut-canvas');
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createLinearGradient(0, 0, 180, 180);
-            grad.addColorStop(0, '#f97316');
-            grad.addColorStop(0.5, '#ea580c');
-            grad.addColorStop(1, '#be123c');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 180, 180);
-
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 54px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🏮', 90, 70);
-            ctx.font = 'bold 44px sans-serif';
-            ctx.fillText('🍈', 90, 130);
-        }
-
-        function downloadIcon() {
-            const canvas = document.getElementById('shortcut-canvas');
-            const link = document.createElement('a');
-            link.download = 'shortcut_icon.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
         }
     </script>
 </body>
