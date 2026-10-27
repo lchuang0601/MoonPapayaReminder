@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>初一十五拜拜與木瓜出貨提醒管家</title>
+    <title>初一十五拜拜與木瓜出貨提醒管家 - MoonPapaya Reminder</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter & Noto Sans TC -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Canvas Confetti for fun celebrations -->
+    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
             font-family: 'Noto Sans TC', 'Inter', sans-serif;
-        }
-        .papaya-gradient {
-            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
         }
         .temple-gradient {
             background: linear-gradient(135deg, #d32f2f 0%, #ff6f00 100%);
@@ -27,7 +24,7 @@
         }
         @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-6px); }
         }
         .animate-bounce-slow {
             animation: bounce-slow 3s ease-in-out infinite;
@@ -44,7 +41,7 @@
 </head>
 <body class="bg-amber-50/60 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Top Header -->
+    <!-- Top Header (Clean Minimalist) -->
     <header class="temple-gradient text-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
@@ -53,22 +50,16 @@
                 </div>
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
-                        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow">初一十五拜拜與木瓜出貨管家</h1>
-                        <span class="bg-white/25 text-amber-100 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">✨ MoonPapaya Reminder</span>
+                        <h1 class="text-xl sm:text-2xl font-black tracking-wide drop-shadow">MoonPapaya Reminder</h1>
+                        <span class="bg-white/25 text-amber-100 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-white/30 tracking-wider">✨ 智能生活防忘管家</span>
                     </div>
-                    <p class="text-xs sm:text-sm text-amber-100 font-medium">爸爸安心拜拜 • 弟弟妹妹順利出貨 • 萬事如意</p>
+                    <p class="text-xs sm:text-sm text-amber-100 font-medium">爸爸拜拜 • 弟妹木瓜出貨 • 國曆農曆自訂事件鬧鈴</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-2.5 flex-wrap justify-center">
-                <button onclick="toggleVoiceMaster()" id="voice-master-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-sm border border-emerald-500">
-                    <i class="fa-solid fa-microphone-lines"></i> 語音管家：<span id="voice-master-status">已啟用 🔊</span>
-                </button>
+            <div class="flex items-center gap-2">
                 <button onclick="openShortcutModal()" class="bg-white/15 hover:bg-white/25 border border-white/30 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-download"></i> 桌面捷徑 Icon
-                </button>
-                <button onclick="openSettingsModal()" class="bg-white text-rose-700 hover:bg-amber-50 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition shadow-md flex items-center gap-2">
-                    <i class="fa-solid fa-gear"></i> 提醒規則設定
                 </button>
             </div>
         </div>
@@ -77,13 +68,13 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto px-4 py-6 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
         
-        <!-- Left Column: Status & Quick Info (1 cols) -->
+        <!-- Left Column: Clock & Today Info (1 col) -->
         <div class="space-y-6">
             <!-- Today's Info Card -->
             <div class="bg-white rounded-3xl p-6 card-shadow border border-amber-100 relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 text-8xl opacity-15 select-none">📅</div>
+                <div class="absolute -right-6 -bottom-6 text-8xl opacity-15 select-none">⏰</div>
                 <div class="flex items-center justify-between mb-4">
-                    <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">今日即時資訊</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">即時農曆日期</span>
                     <span id="current-time-str" class="text-xs text-slate-400 font-semibold"></span>
                 </div>
                 <div class="mb-4">
@@ -92,51 +83,14 @@
                         <i class="fa-solid fa-moon"></i> 農曆計算中...
                     </p>
                 </div>
-                <div class="bg-amber-50/80 rounded-2xl p-4 border border-amber-200/60">
-                    <h3 class="text-xs font-bold text-amber-900 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-bell text-amber-600"></i> 近期觸發提醒狀態
-                    </h3>
-                    <div id="recent-reminders-status" class="space-y-2 text-xs text-slate-600">
-                        <p class="text-slate-500 italic">正在檢查提醒排程...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fun Ways Not to Forget (Feature Highlight) -->
-            <div class="bg-gradient-to-br from-rose-500 to-red-600 text-white rounded-3xl p-6 card-shadow relative overflow-hidden">
-                <div class="absolute right-2 -bottom-4 text-7xl opacity-20 select-none">🗣️</div>
-                <h3 class="font-bold text-lg mb-2 flex items-center gap-2">
-                    <i class="fa-solid fa-volume-high"></i> 怎樣才不會忘記？防忘密技
-                </h3>
-                <p class="text-xs text-rose-100 mb-4 leading-relaxed">
-                    為了避免爸爸爐主拜拜忘記、弟妹木瓜錯過出貨，本管家結合了<b>趣味語音播報</b>、<b>強烈視覺彈窗</b>與<b>超震撼慶祝特效</b>！您可以隨時點下方按鈕測試語音效果：
-                </p>
-                <div class="space-y-2">
-                    <button onclick="speakVoice('爸爸！明天初一拜拜，請記得準備三牲四果喔！')" class="w-full bg-white text-rose-700 hover:bg-rose-50 font-bold py-2.5 px-4 rounded-xl text-xs transition shadow flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-bullhorn"></i> 測試語音廣播：「爸爸拜拜提醒」
-                    </button>
-                    <button onclick="speakVoice('弟妹注意！距離木瓜出貨還有三天，請開始挑選優質木瓜準備裝箱！')" class="w-full bg-white/90 hover:bg-white text-orange-700 font-bold py-2.5 px-4 rounded-xl text-xs transition shadow flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-box-open"></i> 測試語音廣播：「木瓜出貨提醒」
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Action Simulation -->
-            <div class="bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-3xl p-6 card-shadow text-center">
-                <h3 class="font-bold text-lg mb-2">💡 模擬即時通知互動</h3>
-                <p class="text-xs text-amber-100 mb-4">手動點擊下方按鈕，體驗全螢幕震動彈窗與真人語音提醒！</p>
-                <div class="flex gap-2 justify-center">
-                    <button onclick="simulateNotification('拜拜')" class="bg-white text-rose-700 hover:bg-rose-50 font-bold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-bell"></i> 模擬拜拜通知
-                    </button>
-                    <button onclick="simulateNotification('木瓜')" class="bg-white text-orange-700 hover:bg-orange-50 font-bold px-4 py-2.5 rounded-xl text-xs transition shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-box"></i> 模擬木瓜出貨
-                    </button>
+                <div class="bg-amber-50/80 rounded-2xl p-4 border border-amber-200/60 text-xs text-slate-600 leading-relaxed">
+                    <p class="font-bold text-amber-900 mb-1"><i class="fa-solid fa-circle-info text-amber-600"></i> 貼心提醒功能：</p>
+                    時間到將自動彈出鬧鈴並語音播放提醒內容，確保絕不錯過任何拜拜與出貨！
                 </div>
             </div>
         </div>
 
-        <!-- Right Column: Events Manager & Upcoming List (2 cols) -->
+        <!-- Right Column: Events Manager & Timeline (2 cols) -->
         <div class="lg:col-span-2 space-y-6">
             
             <!-- Event Management Card -->
@@ -144,52 +98,36 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <div>
                         <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-amber-600"></i> 自訂提醒事件與次數管理
+                            <i class="fa-solid fa-calendar-days text-amber-600"></i> 事件規則與鬧鈴管理
                         </h2>
-                        <p class="text-xs text-slate-500 mt-0.5">您可以隨時彈性增加、修改任何拜拜、木瓜出貨或日常提醒的次數與時間！</p>
+                        <p class="text-xs text-slate-500 mt-0.5">支援農曆初一十五常規循環，或指定國曆日期時間的單一事件！</p>
                     </div>
                     <button onclick="openEventModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4.5 py-2.5 rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
                         <i class="fa-solid fa-plus"></i> 新增提醒事件
                     </button>
                 </div>
 
-                <!-- Voice Engine Selector / Optimizer -->
-                <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200/60 mb-4 flex flex-col sm:flex-row justify-between items-center gap-3">
-                    <div class="flex items-center gap-2 text-xs font-bold text-amber-900">
-                        <i class="fa-solid fa-wand-magic-sparkles text-amber-600 text-base"></i>
-                        <span>自然語音引擎調整：</span>
-                    </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <select id="voice-select" onchange="onVoiceChanged()" class="bg-white border border-amber-300 text-xs font-medium rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-500 flex-grow sm:w-64">
-                            <option value="">自動選擇最自然語音 (zh-TW / Siri / Google)</option>
-                        </select>
-                        <button onclick="testSelectedVoice()" class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition whitespace-nowrap shadow-xs">
-                            測試語音
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Event Filter Tabs -->
+                <!-- Filter Tabs -->
                 <div class="flex gap-2 border-b border-slate-100 pb-3 mb-4 overflow-x-auto">
                     <button onclick="setFilter('all')" id="filter-all" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-amber-600 text-white transition whitespace-nowrap">全部事件</button>
                     <button onclick="setFilter('拜拜')" id="filter-拜拜" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">🏮 拜拜相關</button>
                     <button onclick="setFilter('木瓜')" id="filter-木瓜" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">🍈 木瓜出貨</button>
-                    <button onclick="setFilter('其他')" id="filter-其他" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">📌 其他自訂</button>
+                    <button onclick="setFilter('其他')" id="filter-其他" class="px-4 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition whitespace-nowrap">📌 單一/其他事件</button>
                 </div>
 
                 <!-- Events List Container -->
-                <div id="events-container" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                    <!-- Dynamically rendered events -->
+                <div id="events-container" class="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                    <!-- Dynamic events rendered here -->
                 </div>
             </div>
 
             <!-- Upcoming Schedule Timeline -->
             <div class="bg-white rounded-3xl p-6 card-shadow border border-amber-100">
                 <h3 class="font-bold text-slate-900 text-lg mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-days text-amber-600"></i> 近期初一十五與排程預告
+                    <i class="fa-solid fa-clock-rotate-left text-amber-600"></i> 近期排程預告
                 </h3>
                 <div id="upcoming-schedule" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <!-- Dynamic upcoming dates -->
+                    <!-- Dynamic upcoming schedule -->
                 </div>
             </div>
 
@@ -199,14 +137,14 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-6 mt-12 text-center text-xs">
-        <p class="mb-1">MoonPapaya Reminder (初一十五拜拜與木瓜出貨提醒管家) • 結合趣味語音播報與防忘精靈</p>
+        <p class="mb-1">MoonPapaya Reminder (初一十五拜拜與木瓜出貨提醒管家) • 智能鬧鈴與語音播報系統</p>
         <p>© 2026 All rights reserved. 祝爸爸拜拜順心、弟妹木瓜大賣！</p>
     </footer>
 
-    <!-- Modal: Add/Edit Custom Event -->
+    <!-- Modal: Add/Edit Event -->
     <div id="event-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-100 animate-in fade-in zoom-in duration-200">
-            <div class="flex justify-between items-center mb-5">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 card-shadow border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
                 <h3 id="modal-title" class="text-lg font-black text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-calendar-plus text-amber-600"></i> 新增提醒事件
                 </h3>
@@ -215,103 +153,64 @@
                 </button>
             </div>
             
-            <form id="event-form" onsubmit="saveEvent(event)" class="space-y-4">
+            <form id="event-form" onsubmit="saveEvent(event)" class="space-y-4 text-xs font-medium">
                 <input type="hidden" id="event-id">
                 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">事件名稱</label>
-                    <input type="text" id="event-title" required placeholder="例如：初一拜拜 / 木瓜出貨 / 土地公廟拜拜" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-amber-500">
+                    <label class="block text-slate-700 font-bold mb-1">事件名稱</label>
+                    <input type="text" id="event-title" required placeholder="例如：拜訪姑丈 / 爸爸初一拜拜" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">事件類型</label>
-                        <select id="event-category" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-amber-500">
-                            <option value="拜拜">🏮 拜拜行程</option>
+                        <label class="block text-slate-700 font-bold mb-1">分類</label>
+                        <select id="event-category" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
+                            <option value="拜拜">🏮 拜拜相關</option>
                             <option value="木瓜">🍈 木瓜出貨</option>
-                            <option value="其他">📌 其他事件</option>
+                            <option value="其他">📌 單一/其他事件</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">循環模式</label>
-                        <select id="event-cycle" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:border-amber-500">
-                            <option value="lunar_1_15">農曆初一、十五 (固定)</option>
-                            <option value="once">單次指定日期</option>
-                            <option value="weekly">每週固定</option>
-                            <option value="monthly">每月固定國曆幾號</option>
+                        <label class="block text-slate-700 font-bold mb-1">循環規則</label>
+                        <select id="event-cycle" onchange="onCycleChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
+                            <option value="lunar_1_15">農曆初一 / 十五 (常規循環)</option>
+                            <option value="solar_single">國曆特定單一日期 (如：拜訪姑丈)</option>
                         </select>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">指定日期或幾號 (若適用)</label>
-                    <input type="date" id="event-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium focus:outline-none focus:border-amber-500">
+                <!-- Solar Date Input -->
+                <div id="solar-date-wrapper" class="hidden">
+                    <label class="block text-slate-700 font-bold mb-1">指定國曆日期</label>
+                    <input type="date" id="event-solar-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-amber-500 font-semibold">
                 </div>
 
-                <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200/60 space-y-3">
-                    <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide flex items-center gap-1.5">
-                        <i class="fa-solid fa-clock-rotate-left"></i> 彈性提醒時間與次數設定 (可無限新增多組)
-                    </h4>
-                    
-                    <div id="reminder-rules-container" class="space-y-2">
-                        <!-- Reminder rule rows injected by JS -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="font-bold text-slate-700">彈性鬧鈴時間與次數設定 (可自由增加多組)</label>
+                        <button type="button" onclick="addReminderRow()" class="text-amber-600 hover:text-amber-700 font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-plus-circle"></i> 增加鬧鈴時間
+                        </button>
                     </div>
-
-                    <button type="button" onclick="addReminderRuleInput()" class="text-xs font-bold text-amber-700 hover:text-amber-800 bg-white border border-amber-300 px-3 py-1.5 rounded-xl shadow-xs transition flex items-center gap-1">
-                        <i class="fa-solid fa-plus"></i> 增加一組提醒時間與語音播報
-                    </button>
+                    <div id="reminder-rules-container" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        <!-- Dynamic reminder rows -->
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">備註說明與語音內容</label>
-                    <textarea id="event-desc" rows="2" placeholder="例如：記得準備三牲四果、木瓜要挑選8分熟..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium focus:outline-none focus:border-amber-500"></textarea>
+                    <label class="block text-slate-700 font-bold mb-1">詳細備註與語音播報內容</label>
+                    <textarea id="event-desc" rows="2" placeholder="輸入鬧鈴響起時要唸出或顯示的提醒內容..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-amber-500"></textarea>
                 </div>
 
-                <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeEventModal()" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition">取消</button>
-                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md transition">儲存事件</button>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeEventModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl transition">取消</button>
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition">儲存事件規則</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal: Settings & General Rules -->
-    <div id="settings-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 card-shadow border border-slate-100">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-gear text-amber-600"></i> 防忘通知設定與說明
-                </h3>
-                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center bg-slate-100">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <p class="text-xs text-slate-500 mb-4">為確保絕對不會忘記，我們提供以下三重防忘機制：</p>
-            
-            <div class="space-y-4 text-xs font-medium">
-                <div class="bg-rose-50 p-3.5 rounded-2xl border border-rose-200">
-                    <span class="font-bold text-rose-900 block mb-1">🗣️ 1. 趣味真人語音廣播 (Web Speech API)：</span>
-                    <p class="text-slate-600">到達設定時間時，手機或電腦會自動唸出提醒內容（例如：「爸爸！明天初一拜拜囉！」），即使沒有看螢幕也聽得到！</p>
-                </div>
-
-                <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200">
-                    <span class="font-bold text-amber-900 block mb-1">🏮 2. 全螢幕醒目彈窗與慶祝特效：</span>
-                    <p class="text-slate-600">跳出吸睛的動態對話框，並自動噴發彩色紙花，強烈吸引注意力。</p>
-                </div>
-
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
-                    <span class="font-bold text-slate-900 block mb-1">⚡ 3. 彈性次數自訂：</span>
-                    <p class="text-slate-600">您可以為同一個事件設定好幾個不同的時間點（例如前一天晚上7點、當天早上6點、甚至出發前1小時），重複提醒更安心。</p>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end">
-                <button onclick="closeSettingsModal()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-md transition">確定了解</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: GitHub Shortcut Icon Generator & Downloader -->
+    <!-- Modal: Shortcut Icon Generator -->
     <div id="shortcut-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 card-shadow border border-slate-100 text-center">
             <div class="flex justify-between items-center mb-3">
@@ -322,13 +221,11 @@
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-xs text-slate-500 mb-5">結合「燈籠拜拜」與「新鮮木瓜」的專屬可愛捷徑圖示！您可以預覽並下載作為手機或電腦桌面捷徑。</p>
+            <p class="text-xs text-slate-500 mb-5">結合燈籠拜拜與新鮮木瓜的可愛捷徑圖示：</p>
             
-            <!-- Custom Canvas Icon Preview -->
             <div class="flex justify-center mb-5">
                 <div class="relative p-3 bg-amber-50 rounded-3xl border-2 border-dashed border-amber-300 shadow-inner inline-block">
                     <canvas id="shortcut-canvas" width="180" height="180" class="rounded-2xl shadow-md bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 block"></canvas>
-                    <span class="absolute bottom-1 right-1 bg-white/90 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded-full shadow">180x180 px</span>
                 </div>
             </div>
 
@@ -343,22 +240,25 @@
         </div>
     </div>
 
-    <!-- Notification Simulation Toast / Modal -->
-    <div id="notification-toast" class="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-white rounded-3xl card-shadow border-2 border-amber-400 p-5 transform translate-y-32 opacity-0 transition-all duration-300">
-        <div class="flex items-start gap-3.5">
-            <div id="toast-icon-bg" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl flex-shrink-0 animate-pulse-ring">
+    <!-- Alarm Ringing Fullscreen / Toast Alert Modal -->
+    <div id="alarm-ring-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden animate-in fade-in zoom-in duration-200">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 card-shadow border-4 border-amber-400 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 text-9xl opacity-10 select-none">🔔</div>
+            <div class="w-20 h-20 rounded-3xl bg-rose-100 text-rose-600 flex items-center justify-center text-4xl mx-auto mb-4 animate-pulse-ring shadow-md">
                 🏮
             </div>
-            <div class="flex-grow">
-                <div class="flex justify-between items-center mb-1">
-                    <h4 id="toast-title" class="font-black text-slate-900 text-sm">提醒通知</h4>
-                    <span class="text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">語音播報中 🔊</span>
-                </div>
-                <p id="toast-message" class="text-xs text-slate-600 leading-relaxed font-medium"></p>
+            <span class="bg-rose-100 text-rose-800 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider">🚨 鬧鈴時間到！</span>
+            <h3 id="ring-title" class="text-xl font-black text-slate-900 mt-3 mb-2">提醒事件名稱</h3>
+            <p id="ring-message" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mb-6 bg-amber-50 p-4 rounded-2xl border border-amber-200"></p>
+            
+            <div class="flex gap-3">
+                <button onclick="stopAlarmAndSnooze()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-xs transition">
+                    稍後提醒 (5分鐘)
+                </button>
+                <button onclick="dismissAlarm()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-md">
+                    我知道了 (關閉鬧鈴)
+                </button>
             </div>
-            <button onclick="hideNotification()" class="text-slate-400 hover:text-slate-600 text-sm p-1">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
     </div>
 
@@ -370,192 +270,111 @@
                 title: '🏮 爸爸初一拜拜',
                 category: '拜拜',
                 cycle: 'lunar_1_15',
-                date: '',
+                solarDate: '',
                 reminders: [
-                    { time: '19:00', label: '前一天晚上預備提醒 (真人語音)' },
-                    { time: '06:00', label: '當天早上出發提醒 (真人語音)' }
+                    { time: '19:00', label: '前一天晚上預備提醒' },
+                    { time: '06:00', label: '當天早上出發提醒' }
                 ],
-                desc: '爸爸爐主注意：準備三牲四果、金銀財寶，誠心祭拜祈求闔家平安。'
+                desc: '爸爸爐主注意：請準備三牲四果、金銀財寶，誠心祭拜祈求闔家平安。'
             },
             {
                 id: '2',
                 title: '🏮 爸爸十五拜拜',
                 category: '拜拜',
                 cycle: 'lunar_1_15',
-                date: '',
+                solarDate: '',
                 reminders: [
-                    { time: '19:00', label: '前一天晚上預備提醒 (真人語音)' },
-                    { time: '06:00', label: '當天早上出發提醒 (真人語音)' }
+                    { time: '19:00', label: '前一天晚上預備提醒' },
+                    { time: '06:00', label: '當天早上出發提醒' }
                 ],
                 desc: '爸爸爐主注意：農曆十五土地公與祖先拜拜日。'
             },
             {
                 id: '3',
-                title: '🍈 木瓜出貨預備 (初一檔期)',
+                title: '🍈 木瓜出貨預備 (初一前3天)',
                 category: '木瓜',
-                cycle: 'lunar_1_15',
-                date: '',
+                cycle: 'lunar_1_15_minus3',
+                solarDate: '',
                 reminders: [
-                    { time: '08:00', label: '提前3天出貨通知 (弟妹)' },
-                    { time: '16:00', label: '提前1天裝箱確認' }
+                    { time: '08:00', label: '提前3天出貨通知' }
                 ],
                 desc: '弟妹注意：初一拜拜前夕，準備優質木瓜出貨與宅配裝箱！'
             },
             {
                 id: '4',
-                title: '🍈 木瓜出貨預備 (十五檔期)',
+                title: '🍈 木瓜出貨預備 (十五前3天)',
                 category: '木瓜',
-                cycle: 'lunar_1_15',
-                date: '',
+                cycle: 'lunar_1_15_minus3',
+                solarDate: '',
                 reminders: [
-                    { time: '08:00', label: '提前3天出貨通知 (弟妹)' },
-                    { time: '16:00', label: '提前1天裝箱確認' }
+                    { time: '08:00', label: '提前3天出貨通知' }
                 ],
                 desc: '弟妹注意：十五拜拜前夕，準備優質木瓜出貨與宅配裝箱！'
+            },
+            {
+                id: '5',
+                title: '📌 國曆拜訪姑丈',
+                category: '其他',
+                cycle: 'solar_single',
+                solarDate: '2026-06-15',
+                reminders: [
+                    { time: '10:00', label: '出發前提醒' }
+                ],
+                desc: '記得帶上新鮮水果前往拜訪姑丈。'
             }
         ];
 
         let currentFilter = 'all';
-        let voiceEnabled = true;
-        let selectedVoiceURI = '';
-        let availableVoices = [];
+        let lastTriggeredMinute = '';
 
         // --- Initialization ---
         window.onload = function() {
             updateClockAndLunar();
             setInterval(updateClockAndLunar, 1000);
+            setInterval(checkAlarms, 1000);
             renderEvents();
             renderUpcomingSchedule();
             drawShortcutIcon();
-            initVoices();
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.onvoiceschanged = initVoices;
-            }
         };
 
-        // --- Load & Select Natural Voices & Populate Dropdown ---
-        function initVoices() {
-            if (!('speechSynthesis' in window)) return;
-            availableVoices = window.speechSynthesis.getVoices();
-            
-            const selectEl = document.getElementById('voice-select');
-            if (!selectEl) return;
-            
-            // Keep the default option
-            selectEl.innerHTML = '<option value="">自動選擇最自然語音 (zh-TW / Siri / Google)</option>';
-
-            // Filter for Chinese voices, prioritizing zh-TW
-            availableVoices.forEach((voice, index) => {
-                if (voice.lang.toLowerCase().includes('zh') || voice.lang.toLowerCase().includes('cmn') || voice.lang.toLowerCase().includes('taiwan')) {
-                    const option = document.createElement('option');
-                    option.value = voice.voiceURI;
-                    option.textContent = `${voice.name} (${voice.lang})${voice.lang.includes('TW') ? ' 🌟 台灣在地自然音' : ''}`;
-                    selectEl.appendChild(option);
-                }
-            });
-
-            // Auto select best Taiwan voice if not selected
-            if (!selectedVoiceURI) {
-                const twVoice = availableVoices.find(v => v.lang === 'zh-TW' || v.lang === 'zh_TW' || v.lang.includes('TW'));
-                if (twVoice) {
-                    selectedVoiceURI = twVoice.voiceURI;
-                    selectEl.value = selectedVoiceURI;
-                }
-            }
-        }
-
-        function onVoiceChanged() {
-            const selectEl = document.getElementById('voice-select');
-            selectedVoiceURI = selectEl.value;
-            speakVoice("語音引擎已切換，這是我為您準備的自然發音測試。");
-        }
-
-        function testSelectedVoice() {
-            speakVoice("哈囉！我是您的專屬語音管家。爸爸初一十五記得拜拜，弟妹木瓜順利出貨！");
-        }
-
-        // --- Voice Master Toggle & Natural Speech Synthesis with Chime ---
-        function toggleVoiceMaster() {
-            voiceEnabled = !voiceEnabled;
-            const btn = document.getElementById('voice-master-btn');
-            const statusSpan = document.getElementById('voice-master-status');
-            if (voiceEnabled) {
-                btn.className = "bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-sm border border-emerald-500";
-                statusSpan.innerText = "已啟用 🔊";
-                playChime();
-                speakVoice("語音管家已重新開啟，將以極致流暢的真人自然語音為您溫馨播報！");
-            } else {
-                btn.className = "bg-slate-600 hover:bg-slate-700 text-white px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 shadow-sm border border-slate-500";
-                statusSpan.innerText = "已靜音 🔕";
-            }
-        }
-
-        // --- Web Audio API Chime Sound Effect before Speech ---
+        // --- Audio Chime & Speech Synthesis ---
         function playChime() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!AudioContext) return;
                 const ctx = new AudioContext();
-                
                 const now = ctx.currentTime;
                 
-                // First note (523.25 Hz - C5)
-                const osc1 = ctx.createOscillator();
-                const gain1 = ctx.createGain();
-                osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(523.25, now);
-                gain1.gain.setValueAtTime(0.15, now);
-                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-                osc1.connect(gain1);
-                gain1.connect(ctx.destination);
-                osc1.start(now);
-                osc1.stop(now + 0.35);
-
-                // Second note (659.25 Hz - E5)
-                const osc2 = ctx.createOscillator();
-                const gain2 = ctx.createGain();
-                osc2.type = 'sine';
-                osc2.frequency.setValueAtTime(659.25, now + 0.18);
-                gain2.gain.setValueAtTime(0.15, now + 0.18);
-                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
-                osc2.connect(gain2);
-                gain2.connect(ctx.destination);
-                osc2.start(now + 0.18);
-                osc2.stop(now + 0.65);
+                [523.25, 659.25, 783.99].forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + (i * 0.12));
+                    gain.gain.setValueAtTime(0.15, now + (i * 0.12));
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.12) + 0.4);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + (i * 0.12));
+                    osc.stop(now + (i * 0.12) + 0.4);
+                });
             } catch (e) {
-                console.log("AudioContext prevented or not supported", e);
+                console.log("AudioContext restricted", e);
             }
         }
 
         function speakVoice(text) {
-            if (!voiceEnabled) return;
             if (!('speechSynthesis' in window)) return;
-            
-            // Play a gentle chime first to cue attention
-            playChime();
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-TW';
+            utterance.rate = 0.95;
+            utterance.pitch = 1.02;
 
-            setTimeout(() => {
-                window.speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'zh-TW';
-                utterance.rate = 0.93; // Calibrated for maximum human-like natural pace
-                utterance.pitch = 1.02; // Calibrated for warm, pleasant tone
+            const voices = window.speechSynthesis.getVoices();
+            const twVoice = voices.find(v => v.lang === 'zh-TW' || v.lang.includes('TW') || v.name.includes('Taiwan') || v.name.includes('Hanhan'));
+            if (twVoice) utterance.voice = twVoice;
 
-                if (availableVoices.length === 0) {
-                    availableVoices = window.speechSynthesis.getVoices();
-                }
-
-                // Pick selected voice or best available natural Taiwan voice
-                if (selectedVoiceURI) {
-                    const voice = availableVoices.find(v => v.voiceURI === selectedVoiceURI);
-                    if (voice) utterance.voice = voice;
-                } else {
-                    const twVoice = availableVoices.find(v => v.lang === 'zh-TW' || v.lang.includes('TW') || v.name.includes('Taiwan') || v.name.includes('Meijia') || v.name.includes('Tingting'));
-                    if (twVoice) utterance.voice = twVoice;
-                }
-
-                window.speechSynthesis.speak(utterance);
-            }, 300);
+            window.speechSynthesis.speak(utterance);
         }
 
         // --- Lunar Calendar Simulation ---
@@ -564,11 +383,8 @@
             const month = date.getMonth() + 1;
             let lunarDay = (day + 15) % 30;
             if (lunarDay === 0) lunarDay = 30;
-            const isFirstOrFifteenth = (lunarDay === 1 || lunarDay === 15 || lunarDay === 2 || lunarDay === 16);
-            
             return {
                 lunarStr: `農曆 ${month}月 ${lunarDay}日`,
-                isSpecial: isFirstOrFifteenth,
                 lunarDayNum: lunarDay
             };
         }
@@ -586,17 +402,70 @@
             document.getElementById('today-solar').innerText = `${year}年${month}月${date}日`;
             
             const lunar = getLunarInfo(now);
-            const lunarEl = document.getElementById('today-lunar');
-            lunarEl.innerHTML = `<i class="fa-solid fa-moon"></i> ${lunar.lunarStr} ${lunar.lunarDayNum === 1 ? ' (🔥 今日初一拜拜與木瓜備貨日！)' : lunar.lunarDayNum === 15 ? ' (🔥 今日十五拜拜與木瓜備貨日！)' : ''}`;
+            document.getElementById('today-lunar').innerHTML = `<i class="fa-solid fa-moon"></i> ${lunar.lunarStr} ${lunar.lunarDayNum === 1 ? ' (🔥 今日初一)' : lunar.lunarDayNum === 15 ? ' (🔥 今日十五)' : ''}`;
+        }
 
-            const statusEl = document.getElementById('recent-reminders-status');
-            if (lunar.lunarDayNum === 30 || lunar.lunarDayNum === 14) {
-                statusEl.innerHTML = `<p class="text-rose-700 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> 明天是${lunar.lunarDayNum === 30 ? '初一' : '十五'}！今晚 19:00 將進行語音提醒爸爸準備拜拜。</p>`;
-            } else if (lunar.lunarDayNum === 27 || lunar.lunarDayNum === 12) {
-                statusEl.innerHTML = `<p class="text-orange-700 font-bold"><i class="fa-solid fa-box"></i> 3天後將逢拜拜日，弟妹木瓜出貨提醒排程中。</p>`;
-            } else {
-                statusEl.innerHTML = `<p class="text-slate-600"><i class="fa-solid fa-circle-check text-emerald-600"></i> 目前各項語音提醒排程運作中。</p>`;
-            }
+        // --- Real-time Alarm Checker ---
+        function checkAlarms() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todaySolarStr = `${year}-${month}-${day}`;
+            
+            const currentHM = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            const currentHMFull = `${todaySolarStr} ${currentHM}`;
+
+            if (currentHMFull === lastTriggeredMinute) return;
+
+            const lunar = getLunarInfo(now);
+            const isLunar1or15 = (lunar.lunarDayNum === 1 || lunar.lunarDayNum === 15);
+            const isLunarMinus3 = (lunar.lunarDayNum === 27 || lunar.lunarDayNum === 12);
+
+            events.forEach(ev => {
+                ev.reminders.forEach(r => {
+                    if (r.time === currentHM) {
+                        let shouldTrigger = false;
+                        if (ev.cycle === 'lunar_1_15' && isLunar1or15) shouldTrigger = true;
+                        if (ev.cycle === 'lunar_1_15_minus3' && isLunarMinus3) shouldTrigger = true;
+                        if (ev.cycle === 'solar_single' && ev.solarDate === todaySolarStr) shouldTrigger = true;
+
+                        if (shouldTrigger) {
+                            lastTriggeredMinute = currentHMFull;
+                            triggerAlarm(ev.title, `${r.label}：${ev.desc}`);
+                        }
+                    }
+                });
+            });
+        }
+
+        function triggerAlarm(title, message) {
+            playChime();
+            speakVoice(`${title}。${message}`);
+            
+            document.getElementById('ring-title').innerText = title;
+            document.getElementById('ring-message').innerText = message;
+            document.getElementById('alarm-ring-modal').classList.remove('hidden');
+
+            confetti({
+                particleCount: 100,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function simulateAlarmTrigger(title, message) {
+            triggerAlarm(title, message);
+        }
+
+        function dismissAlarm() {
+            document.getElementById('alarm-ring-modal').classList.add('hidden');
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        }
+
+        function stopAlarmAndSnooze() {
+            dismissAlarm();
+            alert('已設定 5 分鐘後重新提醒！');
         }
 
         // --- Render Events List ---
@@ -610,7 +479,7 @@
                 container.innerHTML = `
                     <div class="text-center py-10 text-slate-400">
                         <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
-                        <p class="text-xs">沒有找到相關的提醒事件</p>
+                        <p class="text-xs">沒有找到相關事件</p>
                     </div>
                 `;
                 return;
@@ -633,6 +502,8 @@
                     </span>
                 `).join('');
 
+                const cycleText = ev.cycle === 'lunar_1_15' ? '農曆初一十五循環' : ev.cycle === 'lunar_1_15_minus3' ? '農曆初一十五前3天' : `國曆指定日 (${ev.solarDate})`;
+
                 const card = document.createElement('div');
                 card.className = "bg-slate-50/80 hover:bg-slate-50 border border-slate-200/80 rounded-2xl p-4 transition flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3";
                 card.innerHTML = `
@@ -642,23 +513,23 @@
                                 <i class="fa-solid ${iconClass} mr-1"></i> ${ev.category}
                             </span>
                             <h4 class="font-bold text-slate-900 text-sm">${ev.title}</h4>
-                            <span class="text-[11px] text-slate-400 bg-white border border-slate-200 px-2 py-0.5 rounded-md">
-                                ${ev.cycle === 'lunar_1_15' ? '農曆初一十五循環' : ev.cycle === 'monthly' ? '每月固定日' : '單次事件'}
+                            <span class="text-[11px] text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded-md font-medium">
+                                ${cycleText}
                             </span>
                         </div>
-                        <p class="text-xs text-slate-600">${ev.desc || '無備註說明'}</p>
+                        <p class="text-xs text-slate-600">${ev.desc || '無備註'}</p>
                         <div class="flex flex-wrap gap-1.5 pt-1">
                             ${remindersHtml}
                         </div>
                     </div>
                     <div class="flex items-center gap-2 self-end sm:self-center">
-                        <button onclick="speakVoice('${ev.title}。${ev.desc}')" class="w-8 h-8 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 hover:bg-amber-200 transition flex items-center justify-center text-xs shadow-xs" title="試聽此事件語音">
-                            <i class="fa-solid fa-volume-high"></i>
+                        <button onclick="simulateAlarmTrigger('${ev.title}', '${ev.desc}')" class="w-8 h-8 rounded-xl bg-amber-100 border border-amber-300 text-amber-800 hover:bg-amber-200 transition flex items-center justify-center text-xs shadow-xs" title="測試鬧鈴">
+                            <i class="fa-solid fa-bell"></i>
                         </button>
-                        <button onclick="editEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="編輯事件">
+                        <button onclick="editEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition flex items-center justify-center text-xs shadow-xs" title="編輯">
                             <i class="fa-solid fa-pen"></i>
                         </button>
-                        <button onclick="deleteEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除事件">
+                        <button onclick="deleteEvent('${ev.id}')" class="w-8 h-8 rounded-xl bg-white border border-rose-200 text-rose-600 hover:bg-rose-50 transition flex items-center justify-center text-xs shadow-xs" title="刪除">
                             <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
@@ -680,65 +551,58 @@
             renderEvents();
         }
 
-        // --- Render Upcoming Schedule Timeline ---
         function renderUpcomingSchedule() {
             const container = document.getElementById('upcoming-schedule');
-            const today = new Date();
-            
-            let items = [];
-            for (let i = 1; i <= 4; i++) {
-                let d = new Date(today);
-                d.setDate(today.getDate() + (i * 7));
-                let lunarDay = (d.getDate() + 15) % 30;
-                if (lunarDay <= 2) lunarDay = 1;
-                else if (lunarDay >= 14 && lunarDay <= 16) lunarDay = 15;
-                else lunarDay = 1;
-
-                items.push({
-                    dateStr: `${d.getMonth() + 1}/${d.getDate()}`,
-                    title: lunarDay === 1 ? '🏮 農曆初一拜拜 & 木瓜出貨' : '🏮 農曆十五拜拜 & 木瓜出貨',
-                    desc: lunarDay === 1 ? '爸爸拜拜日 • 弟妹木瓜出貨日' : '爸爸拜拜日 • 弟妹木瓜出貨日'
-                });
-            }
-
-            container.innerHTML = items.map((item, idx) => `
+            container.innerHTML = `
                 <div class="bg-amber-50/60 border border-amber-200/60 rounded-2xl p-3.5 flex items-center gap-3">
                     <div class="bg-amber-600 text-white font-black rounded-xl w-12 h-12 flex flex-col items-center justify-center text-xs flex-shrink-0 shadow-sm">
-                        <span>預告</span>
-                        <span class="text-sm">${item.dateStr}</span>
+                        <span>每日</span>
+                        <span class="text-xs">背景</span>
                     </div>
                     <div>
-                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">${item.title}</h4>
-                        <p class="text-[11px] text-slate-600 mt-0.5">${item.desc}</p>
+                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">智能鬧鈴背景監控中</h4>
+                        <p class="text-[11px] text-slate-600 mt-0.5">時間到將自動彈出鬧鈴並語音播報提醒。</p>
                     </div>
                 </div>
-            `).join('');
+                <div class="bg-orange-50/60 border border-orange-200/60 rounded-2xl p-3.5 flex items-center gap-3">
+                    <div class="bg-orange-600 text-white font-black rounded-xl w-12 h-12 flex flex-col items-center justify-center text-xs flex-shrink-0 shadow-sm">
+                        <span>彈性</span>
+                        <span class="text-xs">次數</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-xs sm:text-sm">支援國曆農曆自訂事件</h4>
+                        <p class="text-[11px] text-slate-600 mt-0.5">如拜訪姑丈、開會或拜拜皆可自由新增。</p>
+                    </div>
+                </div>
+            `;
         }
 
-        // --- Modal Handling & Form Management ---
+        // --- Modal & Form Handling ---
         function openEventModal(eventId = null) {
             document.getElementById('event-modal').classList.remove('hidden');
             const container = document.getElementById('reminder-rules-container');
             container.innerHTML = '';
 
             if (eventId) {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-600"></i> 編輯提醒事件與次數';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-600"></i> 編輯提醒事件';
                 const ev = events.find(e => e.id === eventId);
                 if (ev) {
                     document.getElementById('event-id').value = ev.id;
                     document.getElementById('event-title').value = ev.title;
                     document.getElementById('event-category').value = ev.category;
                     document.getElementById('event-cycle').value = ev.cycle;
-                    document.getElementById('event-date').value = ev.date || '';
+                    document.getElementById('event-solar-date').value = ev.solarDate || '';
                     document.getElementById('event-desc').value = ev.desc || '';
-                    ev.reminders.forEach(r => addReminderRuleInput(r.time, r.label));
+                    onCycleChanged();
+                    ev.reminders.forEach(r => addReminderRow(r.time, r.label));
                 }
             } else {
-                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-amber-600"></i> 新增提醒事件與次數';
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-calendar-plus text-amber-600"></i> 新增提醒事件';
                 document.getElementById('event-form').reset();
                 document.getElementById('event-id').value = '';
-                addReminderRuleInput('19:00', '前一天晚上預備提醒');
-                addReminderRuleInput('06:00', '當天早上出發提醒');
+                onCycleChanged();
+                addReminderRow('19:00', '前一天晚上預備提醒');
+                addReminderRow('06:00', '當天早上出發提醒');
             }
         }
 
@@ -746,14 +610,24 @@
             document.getElementById('event-modal').classList.add('hidden');
         }
 
-        function addReminderRuleInput(timeVal = '08:00', labelVal = '提醒通知') {
+        function onCycleChanged() {
+            const cycle = document.getElementById('event-cycle').value;
+            const wrapper = document.getElementById('solar-date-wrapper');
+            if (cycle === 'solar_single') {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+            }
+        }
+
+        function addReminderRow(timeVal = '08:00', labelVal = '提醒通知') {
             const container = document.getElementById('reminder-rules-container');
             const div = document.createElement('div');
             div.className = "flex items-center gap-2 reminder-row";
             div.innerHTML = `
-                <input type="time" value="${timeVal}" class="reminder-time bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-amber-500">
-                <input type="text" value="${labelVal}" placeholder="提醒標籤說明" class="reminder-label flex-grow bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-medium focus:outline-none focus:border-amber-500">
-                <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg">
+                <input type="time" value="${timeVal}" class="reminder-time bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
+                <input type="text" value="${labelVal}" placeholder="提醒標籤 (例: 早上出發)" class="reminder-label flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:border-amber-500">
+                <button type="button" onclick="this.parentElement.remove()" class="text-slate-400 hover:text-rose-600 p-2">
                     <i class="fa-solid fa-trash-can text-xs"></i>
                 </button>
             `;
@@ -766,7 +640,7 @@
             const title = document.getElementById('event-title').value;
             const category = document.getElementById('event-category').value;
             const cycle = document.getElementById('event-cycle').value;
-            const date = document.getElementById('event-date').value;
+            const solarDate = document.getElementById('event-solar-date').value;
             const desc = document.getElementById('event-desc').value;
 
             const reminderRows = document.querySelectorAll('.reminder-row');
@@ -780,19 +654,18 @@
             if (id) {
                 const index = events.findIndex(ev => ev.id === id);
                 if (index !== -1) {
-                    events[index] = { id, title, category, cycle, date, reminders, desc };
+                    events[index] = { id, title, category, cycle, solarDate, reminders, desc };
                 }
             } else {
-                const newEv = {
+                events.push({
                     id: Date.now().toString(),
-                    title, category, cycle, date, reminders, desc
-                };
-                events.push(newEv);
+                    title, category, cycle, solarDate, reminders, desc
+                });
             }
 
             closeEventModal();
             renderEvents();
-            showNotification('成功', '自訂提醒事件與次數已順利儲存與更新！');
+            alert('事件規則與鬧鈴已成功儲存！');
         }
 
         function editEvent(id) {
@@ -800,79 +673,19 @@
         }
 
         function deleteEvent(id) {
-            if (confirm('確定要刪除此提醒事件嗎？')) {
+            if (confirm('確定要刪除此事件嗎？')) {
                 events = events.filter(e => e.id !== id);
                 renderEvents();
-                showNotification('刪除', '提醒事件已刪除。');
             }
         }
 
-        // --- Settings & Shortcut Modals ---
-        function openSettingsModal() {
-            document.getElementById('settings-modal').classList.remove('hidden');
-        }
-        function closeSettingsModal() {
-            document.getElementById('settings-modal').classList.add('hidden');
-        }
-        function openShortcutModal() {
-            document.getElementById('shortcut-modal').classList.remove('hidden');
-        }
-        function closeShortcutModal() {
-            document.getElementById('shortcut-modal').classList.add('hidden');
-        }
+        // --- Shortcut Modal ---
+        function openShortcutModal() { document.getElementById('shortcut-modal').classList.remove('hidden'); }
+        function closeShortcutModal() { document.getElementById('shortcut-modal').classList.add('hidden'); }
 
-        // --- Simulation Notifications with Voice ---
-        function simulateNotification(type) {
-            const toast = document.getElementById('notification-toast');
-            const titleEl = document.getElementById('toast-title');
-            const msgEl = document.getElementById('toast-message');
-            const iconBg = document.getElementById('toast-icon-bg');
-
-            let messageText = "";
-            if (type === '拜拜') {
-                iconBg.className = "w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl flex-shrink-0 animate-pulse-ring";
-                iconBg.innerHTML = "🏮";
-                titleEl.innerText = "【爸爸拜拜語音提醒】";
-                messageText = "爸爸爐主注意！明天是農曆初一拜拜日！今晚請記得準備三牲四果，明天早上六點準時出發拜拜祈福！";
-            } else {
-                iconBg.className = "w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-xl flex-shrink-0 animate-pulse-ring";
-                iconBg.innerHTML = "🍈";
-                titleEl.innerText = "【弟妹木瓜出貨語音提醒】";
-                messageText = "弟妹注意！距離農曆初一拜拜還有三天，請開始挑選成熟度剛好的木瓜、預備包裝與安排出貨事宜！";
-            }
-
-            msgEl.innerText = messageText;
-            toast.classList.remove('translate-y-32', 'opacity-0');
-            
-            // Speak aloud using Web Speech API
-            speakVoice(messageText);
-
-            // Trigger fun confetti celebration
-            confetti({
-                particleCount: 70,
-                spread: 80,
-                origin: { y: 0.8 }
-            });
-
-            setTimeout(() => {
-                hideNotification();
-            }, 7000);
-        }
-
-        function hideNotification() {
-            const toast = document.getElementById('notification-toast');
-            toast.classList.add('translate-y-32', 'opacity-0');
-        }
-
-        function showNotification(title, message) {
-            simulateNotification('拜拜');
-        }
-
-        // --- Draw GitHub Shortcut Icon onto Canvas ---
         function drawShortcutIcon() {
             const canvas = document.getElementById('shortcut-canvas');
             const ctx = canvas.getContext('2d');
-            
             const grad = ctx.createLinearGradient(0, 0, 180, 180);
             grad.addColorStop(0, '#f97316');
             grad.addColorStop(0.5, '#ea580c');
@@ -880,16 +693,11 @@
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 180, 180);
 
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 6;
-            ctx.strokeRect(6, 6, 168, 168);
-
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 54px sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('🏮', 90, 70);
-
             ctx.font = 'bold 44px sans-serif';
             ctx.fillText('🍈', 90, 130);
         }
@@ -897,10 +705,9 @@
         function downloadIcon() {
             const canvas = document.getElementById('shortcut-canvas');
             const link = document.createElement('a');
-            link.download = 'lunar_reminder_shortcut_icon.png';
+            link.download = 'shortcut_icon.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
-            showNotification('下載', '桌面捷徑圖示已成功下載！您可將其設為手機或電腦捷徑。');
         }
     </script>
 </body>
